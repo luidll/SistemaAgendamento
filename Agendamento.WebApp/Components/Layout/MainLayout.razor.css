@@ -96,3 +96,16 @@ main {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.profile-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    color: #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+}

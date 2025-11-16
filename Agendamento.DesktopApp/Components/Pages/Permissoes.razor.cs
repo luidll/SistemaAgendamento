@@ -20,13 +20,15 @@ namespace Agendamento.DesktopApp.Components.Pages
         private List<Rotina> listaRotinasDisponiveis = new();
         private List<Rotina> listaRotinasConcedidas = new();
 
-        private int[]? rotinasDisponiveisSelecionadas;
-        private int[]? rotinasConcedidasSelecionadas;
+        private int[] rotinasDisponiveisSelecionadas = Array.Empty<int>();
+        private int[] rotinasConcedidasSelecionadas = Array.Empty<int>();
 
         protected override async Task OnInitializedAsync()
         {
             listaUsuarios = await DbContext.Usuarios.OrderBy(u => u.NomeCompleto).ToListAsync();
-            todasAsRotinas = await DbContext.Rotinas.Where(r => r.Ativo).OrderBy(r => r.Nome).ToListAsync();
+            todasAsRotinas = await DbContext.Rotinas.Where(r => r.Ativo)
+                                                  .OrderBy(r => r.Nome ?? string.Empty)
+                                                  .ToListAsync();
         }
         private async Task OnUsuarioSelecionado(ChangeEventArgs e)
         {

@@ -33,7 +33,7 @@
                 <div class="col-5">
                     <strong>Rotinas Disponíveis</strong>
                     <select multiple class="form-control" style="height: 300px;" @bind="rotinasDisponiveisSelecionadas">
-                        @foreach (var r in listaRotinasDisponiveis.OrderBy(r => r.Nome))
+                        @foreach (var r in listaRotinasDisponiveis.OrderBy(r => r.Nome ?? string.Empty))
                         {
                             <option value="@r.Id">@r.Nome</option>
                         }
@@ -52,7 +52,7 @@
                 <div class="col-5">
                     <strong>Rotinas Concedidas</strong>
                     <select multiple class="form-control" style="height: 300px;" @bind="rotinasConcedidasSelecionadas">
-                        @foreach (var r in listaRotinasConcedidas.OrderBy(r => r.Nome))
+                        @foreach (var r in listaRotinasConcedidas.OrderBy(r => r.Nome ?? string.Empty))
                         {
                             <option value="@r.Id">@r.Nome</option>
                         }

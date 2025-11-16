@@ -1,23 +1,45 @@
 ﻿@inherits LayoutComponentBase
+@namespace Agendamento.WebApp.Components.Layout
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+    <header class="navbar navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+
+            <a class="navbar-brand" href="/dashboard">
+                Sistema de Agendamento
+            </a>
+
+            <nav class="d-flex flex-grow-1 px-4">
+                @if (ListaDeModulos.Any())
+                {
+                    @foreach (var modulo in ListaDeModulos)
+                    {
+                        <a href="#" class="nav-link text-white" title="@modulo.Nome">
+                            <span class="bi bi-grid-fill fs-5"></span>
+                        </a>
+                    }
+                }
+            </nav>
+
+            <div class="dropdown">
+                <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="profile-circle">
+                        @UserInitials
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end text-small shadow">
+                    <li><a class="dropdown-item" href="#">Configurações</a></li>
+                    <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/logout">Sair</a></li>
+                </ul>
+            </div>
+
         </div>
+    </header>
 
-        <article class="content px-4">
-            @Body
-        </article>
+    <main class="content px-4 py-4">
+        @Body
     </main>
-</div>
-
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
 </div>

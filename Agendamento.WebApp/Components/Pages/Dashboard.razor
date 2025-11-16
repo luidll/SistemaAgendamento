@@ -1,0 +1,39 @@
+﻿@page "/dashboard"
+@layout MainLayout
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+<h3>Minhas Reuniões</h3>
+<p class="text-muted">Reuniões agendadas para a semana.</p>
+
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Próximos Agendamentos</span>
+        <span class="badge bg-light text-dark">@DateTime.Now.ToString("dd/MM/yyyy")</span>
+    </div>
+    <div class="card-body">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Data/Hora</th>
+                    <th>Assunto</th>
+                    <th>Local</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>17/11/2025 10:00</td>
+                    <td>Reunião de Alinhamento Semanal</td>
+                    <td>Sala 1</td>
+                </tr>
+                <tr>
+                    <td>18/11/2025 14:00</td>
+                    <td>Discussão do Projeto WebApp</td>
+                    <td>Microsoft Teams</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
