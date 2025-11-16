@@ -1,7 +1,5 @@
-﻿// Adicione estes 'usings' no topo do arquivo
-using Agendamento.Infrastructure.Data;
+﻿using Agendamento.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-// ---
 
 using Microsoft.Extensions.Logging;
 

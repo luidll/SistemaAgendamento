@@ -46,6 +46,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Agendamento.Core\Agendamento.Core.csproj" />
+		<ProjectReference Include="..\Agendamento.Infrastructure\Agendamento.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>
