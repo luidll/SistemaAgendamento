@@ -11,10 +11,10 @@ namespace Agendamento.DesktopApp.Components.Pages
     public partial class Modulos
     {
         [Inject]
-        private AppDbContext DbContext { get; set; }
+        private AppDbContext DbContext { get; set; } = null!;
 
-        private List<Modulo> listaModulos;
-        private List<Sistema> listaSistemas;
+        private List<Modulo> listaModulos = new();
+        private List<Sistema> listaSistemas = new();
         private Modulo moduloAtual = new();
 
         protected override async Task OnInitializedAsync()
@@ -27,6 +27,7 @@ namespace Agendamento.DesktopApp.Components.Pages
         {
             listaModulos = await DbContext.Modulos
                                           .Include(m => m.Sistema)
+                                          .AsNoTracking()
                                           .ToListAsync();
         }
 

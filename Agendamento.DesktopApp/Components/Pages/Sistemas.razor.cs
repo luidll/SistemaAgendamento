@@ -10,9 +10,9 @@ namespace Agendamento.DesktopApp.Components.Pages
     public partial class Sistemas
     {
         [Inject]
-        private AppDbContext DbContext { get; set; }
+        private AppDbContext DbContext { get; set; } = null!;
 
-        private List<Sistema> listaSistemas;
+        private List<Sistema> listaSistemas = new();
         private Sistema sistemaAtual = new();
 
         protected override async Task OnInitializedAsync()
@@ -22,7 +22,7 @@ namespace Agendamento.DesktopApp.Components.Pages
 
         private async Task LoadSistemas()
         {
-            listaSistemas = await DbContext.Sistemas.ToListAsync();
+            listaSistemas = await DbContext.Sistemas.AsNoTracking().ToListAsync();
         }
 
         private async Task Salvar()

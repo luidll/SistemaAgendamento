@@ -5,11 +5,11 @@ namespace Agendamento.DesktopApp.Components.Pages
     public partial class Login
     {
         [Inject]
-        private NavigationManager NavManager { get; set; }
+        private NavigationManager NavManager { get; set; } = null!;
 
-        private string login;
-        private string senha;
-        private string mensagemErro;
+        private string login = string.Empty;
+        private string senha = string.Empty;
+        private string? mensagemErro;
 
         private void FazerLogin()
         {
@@ -17,7 +17,7 @@ namespace Agendamento.DesktopApp.Components.Pages
             {
                 mensagemErro = null;
 
-                NavManager.NavigateTo("/sistemas");
+                NavManager.NavigateTo("/dashboard");
             }
             else
             {

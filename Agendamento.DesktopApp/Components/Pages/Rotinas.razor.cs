@@ -11,10 +11,10 @@ namespace Agendamento.DesktopApp.Components.Pages
     public partial class Rotinas
     {
         [Inject]
-        private AppDbContext DbContext { get; set; }
+        private AppDbContext DbContext { get; set; } = null!;
 
-        private List<Rotina> listaRotinas;
-        private List<Modulo> listaModulos;
+        private List<Rotina> listaRotinas = new List<Rotina>();
+        private List<Modulo> listaModulos = new List<Modulo>();
         private Rotina rotinaAtual = new();
 
         protected override async Task OnInitializedAsync()
@@ -27,6 +27,7 @@ namespace Agendamento.DesktopApp.Components.Pages
             listaRotinas = await DbContext.Rotinas
                                           .Include(r => r.Modulo)
                                             .ThenInclude(m => m.Sistema)
+                                          .AsNoTracking()
                                           .ToListAsync();
         }
 

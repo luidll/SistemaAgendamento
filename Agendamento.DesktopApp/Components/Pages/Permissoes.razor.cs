@@ -11,17 +11,17 @@ namespace Agendamento.DesktopApp.Components.Pages
     public partial class Permissoes
     {
         [Inject]
-        private AppDbContext DbContext { get; set; }
+        private AppDbContext DbContext { get; set; } = null!;
 
-        private List<Usuario> listaUsuarios;
-        private List<Rotina> todasAsRotinas;
-        private Usuario usuarioAtual;
+        private List<Usuario> listaUsuarios = new();
+        private List<Rotina> todasAsRotinas = new();
+        private Usuario? usuarioAtual;
 
         private List<Rotina> listaRotinasDisponiveis = new();
         private List<Rotina> listaRotinasConcedidas = new();
 
-        private int[] rotinasDisponiveisSelecionadas;
-        private int[] rotinasConcedidasSelecionadas;
+        private int[]? rotinasDisponiveisSelecionadas;
+        private int[]? rotinasConcedidasSelecionadas;
 
         protected override async Task OnInitializedAsync()
         {
@@ -30,7 +30,7 @@ namespace Agendamento.DesktopApp.Components.Pages
         }
         private async Task OnUsuarioSelecionado(ChangeEventArgs e)
         {
-            var usuarioId = int.Parse(e.Value.ToString());
+            var usuarioId = Convert.ToInt32(e.Value);
             if (usuarioId == 0)
             {
                 usuarioAtual = null;

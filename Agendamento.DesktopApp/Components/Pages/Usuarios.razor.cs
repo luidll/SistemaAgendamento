@@ -10,14 +10,14 @@ namespace Agendamento.DesktopApp.Components.Pages
     public partial class Usuarios
     {
         [Inject]
-        private AppDbContext DbContext { get; set; }
+        private AppDbContext DbContext { get; set; } = null!;
 
-        private List<Usuario> listaUsuarios;
+        private List<Usuario> listaUsuarios = new();
         private Usuario usuarioAtual = new();
 
-        private string senha;
-        private string confirmarSenha;
-        private string mensagemErro;
+        private string senha = string.Empty;
+        private string confirmarSenha = string.Empty;
+        private string? mensagemErro;
 
         protected override async Task OnInitializedAsync()
         {
@@ -26,7 +26,7 @@ namespace Agendamento.DesktopApp.Components.Pages
 
         private async Task LoadUsuarios()
         {
-            listaUsuarios = await DbContext.Usuarios.ToListAsync();
+            listaUsuarios = await DbContext.Usuarios.AsNoTracking().ToListAsync();
         }
 
         private async Task Salvar()
