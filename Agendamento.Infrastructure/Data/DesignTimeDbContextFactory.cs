@@ -9,7 +9,7 @@ namespace Agendamento.Infrastructure.Data
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
-            const string connectionString = "Server=.\\SQLEXPRESS;Database=AgendamentoDB;Trusted_Connection=True;Encrypt=False;";
+            const string connectionString = "Server=localhost\\SQLEXPRESS;Database=AgendamentoDB;Trusted_Connection=True;Encrypt=False;TrustServerCertificate=True;";
 
             optionsBuilder.UseSqlServer(connectionString);
 
