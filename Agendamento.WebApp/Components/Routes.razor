@@ -1,6 +1,27 @@
 ﻿<Router AppAssembly="typeof(Program).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+        
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+            
+            <NotAuthorized>
+                <PageTitle>Não Autorizado</PageTitle>
+                <p>Você precisa estar logado para acessar esta página.</p>
+                <p>Por favor, <a href="/">clique aqui para fazer o login</a>.</p>
+            </NotAuthorized>
+            
+            <Authorizing>
+                <PageTitle>Autorizando...</PageTitle>
+                <p>Verificando suas permissões...</p>
+            </Authorizing>
+            
+        </AuthorizeRouteView>
+        
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
+    <NotFound>
+        <PageTitle>Não Encontrado</PageTitle>
+        <LayoutView Layout="typeof(Layout.MainLayout)">
+            <p>Desculpe, não há nada neste endereço.</p>
+        </LayoutView>
+    </NotFound>
 </Router>

@@ -1,0 +1,51 @@
+﻿@page "/"
+@layout EmptyLayout
+
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f2f5;
+    }
+
+    .login-box {
+        background-color: #ffffff;
+        padding: 2.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-box">
+
+        <h3 class="mb-4">Sistema de Agendamento</h3>
+
+        <div class="mb-3 text-start">
+            <label for="loginInput" class="form-label">Usuário</label>
+            <input type="text" class="form-control" id="loginInput" @bind="login" placeholder="Seu login de usuário">
+        </div>
+
+        <div class="mb-3 text-start">
+            <label for="senhaInput" class="form-label">Senha</label>
+            <input type="password" class="form-control" id="senhaInput" @bind="senha" placeholder="Sua senha">
+        </div>
+
+        @if (!string.IsNullOrEmpty(mensagemErro))
+        {
+            <div class="alert alert-danger mt-3">
+                @mensagemErro
+            </div>
+        }
+
+        <button class="btn btn-primary w-100 mt-3" @onclick="TentarLogin">
+            Acessar
+        </button>
+
+    </div>
+</div>
