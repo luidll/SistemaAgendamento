@@ -10,7 +10,7 @@ namespace Agendamento.WebApp.Components.Layout
     public partial class MainLayout
     {
         [Inject]
-        private AppDbContext DbContext { get; set; } = null!;
+        private IDbContextFactory<AppDbContext> DbFactory { get; set; } = null!;
 
         [Inject]
         private NavigationManager NavManager { get; set; } = null!;
@@ -23,6 +23,7 @@ namespace Agendamento.WebApp.Components.Layout
 
         protected override async Task OnInitializedAsync()
         {
+            using var db = DbFactory.CreateDbContext();
             var authState = await AuthenticationStateTask;
             var user = authState.User;
 
@@ -31,7 +32,7 @@ namespace Agendamento.WebApp.Components.Layout
                 var userIdString = user.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (int.TryParse(userIdString, out var userId))
                 {
-                    var dadosUsuario = await DbContext.Usuarios
+                    var dadosUsuario = await db.Usuarios
                         .AsNoTracking()
                         .Include(u => u.RotinasPermitidas)
                             .ThenInclude(r => r.Modulo)

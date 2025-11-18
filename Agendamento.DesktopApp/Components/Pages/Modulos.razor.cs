@@ -41,9 +41,7 @@ namespace Agendamento.DesktopApp.Components.Pages
         private async Task Salvar()
         {
             if (moduloAtual.SistemaId == 0)
-            {
                 return;
-            }
 
             if (moduloAtual.Id == 0)
             {
@@ -67,7 +65,9 @@ namespace Agendamento.DesktopApp.Components.Pages
                 Id = modulo.Id,
                 Nome = modulo.Nome,
                 Ativo = modulo.Ativo,
-                SistemaId = modulo.SistemaId
+                SistemaId = modulo.SistemaId,
+                Url = modulo.Url,
+                Icon = modulo.Icon
             };
         }
 

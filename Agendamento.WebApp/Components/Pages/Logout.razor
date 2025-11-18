@@ -1,0 +1,16 @@
+﻿@page "/logout"
+@inject NavigationManager NavManager
+@inject IHttpClientFactory HttpFactory
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var client = HttpFactory.CreateClient();
+
+        client.BaseAddress = new Uri(NavManager.BaseUri);
+
+        await client.GetAsync("api/auth/logout");
+
+        NavManager.NavigateTo("/", forceLoad: true);
+    }
+}

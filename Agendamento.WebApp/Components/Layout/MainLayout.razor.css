@@ -1,108 +1,97 @@
-.page {
-    position: relative;
-    display: flex;
-    flex-direction: column;
+/* NAVBAR
+----------------------------------------------------------------------------------------------------*/
+.navbar {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.175);
 }
 
-main {
-    flex: 1;
+.dropdown-menu {
+    border: 1px solid #ccc;
 }
 
-.sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+@media (min-width: 769px) {
+    .navbar {
+        height: 79px;
+    }
+
+        .navbar .navbar-brand {
+            padding: 3px 15px;
+        }
+
+            .navbar .navbar-brand img {
+                height: 65px;
+            }
+
+    .navbar-nav > li > a {
+        text-align: center;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-size: 12px;
+        min-width: 90px;
+    }
+
+        .navbar-nav > li > a > i {
+            font-size: 36px;
+            display: block;
+            padding-bottom: 3px;
+        }
 }
 
-.top-row {
-    background-color: #f7f7f7;
-    border-bottom: 1px solid #d6d5d5;
-    justify-content: flex-end;
-    height: 3.5rem;
-    display: flex;
-    align-items: center;
+@media (max-width: 768px) {
+    .navbar .navbar-brand {
+        padding: 5px;
+        color: #1F96B7;
+    }
+
+        .navbar .navbar-brand img {
+            height: 40px;
+            margin-right: 8px;
+            display: inline-block;
+        }
 }
 
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        white-space: nowrap;
-        margin-left: 1.5rem;
-        text-decoration: none;
-    }
-
-    .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
-        text-decoration: underline;
-    }
-
-    .top-row ::deep a:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-@media (max-width: 640.98px) {
-    .top-row {
-        justify-content: space-between;
-    }
-
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        margin-left: 0;
-    }
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+    background-color: #1F96B7;
+    color: #ffffff;
 }
 
-@media (min-width: 641px) {
-    .page {
-        flex-direction: row;
-    }
-
-    .sidebar {
-        width: 250px;
-        height: 100vh;
-        position: sticky;
-        top: 0;
-    }
-
-    .top-row {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
-
-    .top-row.auth ::deep a:first-child {
-        flex: 1;
-        text-align: right;
-        width: 0;
-    }
-
-    .top-row, article {
-        padding-left: 2rem !important;
-        padding-right: 1.5rem !important;
-    }
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    background-color: #1F96B7;
+    color: #ffffff;
 }
 
-#blazor-error-ui {
-    color-scheme: light only;
-    background: lightyellow;
-    bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-    box-sizing: border-box;
-    display: none;
-    left: 0;
-    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+    color: #ffffff;
+    text-decoration: none;
+    outline: 0;
+    background-color: #1F96B7;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
+.navbar-default .navbar-nav > li > a {
+    color: #2e3c56;
+}
+
+    .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+        color: #1F96B7;
+        background-color: transparent;
     }
+.profile-img {
+    border: 1px solid #f1f1f1;
+    width: 175px;
+    height: 175px;
+}
+
+.profile-img-min {
+    border: 1px solid #f1f1f1;
+    width: 60px;
+    height: 60px;
+}
 
 .profile-circle {
-    width: 38px;
-    height: 38px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background-color: #f8f9fa;
-    color: #0d6efd;
+    background-color: #51ff00;
+    color: #f8f9fa;
     display: flex;
     align-items: center;
     justify-content: center;

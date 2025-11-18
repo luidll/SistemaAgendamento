@@ -1,0 +1,105 @@
+﻿@page "/regras"
+@layout MainLayout
+
+@using Agendamento.Core.Entities
+@using System.Linq
+@using System.Security.Claims
+@using System
+
+<h3>Gestão de Regras de Disponibilidade</h3>
+<p class="text-muted">Defina seus dias de trabalho, horários de início, fim e a duração dos slots.</p>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title">@(regraAtual.Id == 0 ? "Nova Regra" : "Editar Regra")</h5>
+
+        <EditForm Model="regraAtual" OnValidSubmit="SalvarRegra" FormName="RegraForm">
+            <DataAnnotationsValidator />
+
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <label class="form-label">Dia da Semana</label>
+                    <InputSelect @bind-Value="regraAtual.DiaDaSemana" class="form-select">
+                        @foreach (var day in DaysOfWeek)
+                        {
+                            <option value="@day">@day.ToString()</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => regraAtual.DiaDaSemana)" class="text-danger" />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Hora Início (HH:mm:ss)</label>
+                    <InputText @bind-Value="HoraInicioString" class="form-control" />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Hora Fim (HH:mm:ss)</label>
+                    <InputText @bind-Value="HoraFimString" class="form-control" />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Duração do Slot (minutos)</label>
+                    <InputNumber @bind-Value="regraAtual.DuracaoSlotMinutos" class="form-control" />
+                    <ValidationMessage For="@(() => regraAtual.DuracaoSlotMinutos)" class="text-danger" />
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(mensagemErro))
+            {
+                <div class="alert alert-danger mt-3">@mensagemErro</div>
+            }
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success">
+                    <span class="bi bi-save"></span> Salvar Regra
+                </button>
+                <button type="button" class="btn btn-secondary" @onclick="LimparFormulario">
+                    <span class="bi bi-x-circle"></span> Cancelar
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<div class="card shadow-sm mt-4">
+    <div class="card-header">
+        Regras Atuais Cadastradas
+    </div>
+    <div class="card-body">
+        @if (listaRegras.Any())
+        {
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Dia da Semana</th>
+                        <th>Início</th>
+                        <th>Fim</th>
+                        <th>Duração do Slot</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var regra in listaRegras)
+                    {
+                        <tr>
+                            <td>@regra.DiaDaSemana.ToString()</td>
+                            <td>@regra.HoraInicio.ToString(@"hh\:mm")</td>
+                            <td>@regra.HoraFim.ToString(@"hh\:mm")</td>
+                            <td>@regra.DuracaoSlotMinutos min</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" @onclick="() => CarregarParaEdicao(regra)">Editar</button>
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => DeletarRegra(regra.Id)">Deletar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p><em>Nenhuma regra de disponibilidade cadastrada.</em></p>
+        }
+    </div>
+</div>

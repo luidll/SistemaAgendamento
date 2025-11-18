@@ -4,6 +4,7 @@ using Agendamento.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Agendamento.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251116234009_AddAgendamentosTable")]
+    partial class AddAgendamentosTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,10 +67,6 @@ namespace Agendamento.Infrastructure.Migrations
                     b.Property<bool>("Ativo")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -75,45 +74,11 @@ namespace Agendamento.Infrastructure.Migrations
                     b.Property<int>("SistemaId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SistemaId");
 
                     b.ToTable("Modulos");
-                });
-
-            modelBuilder.Entity("Agendamento.Core.Entities.RegraDisponibilidade", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DiaDaSemana")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DuracaoSlotMinutos")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("HoraFim")
-                        .HasColumnType("time");
-
-                    b.Property<TimeSpan>("HoraInicio")
-                        .HasColumnType("time");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("RegrasDisponibilidade");
                 });
 
             modelBuilder.Entity("Agendamento.Core.Entities.Rotina", b =>
@@ -233,17 +198,6 @@ namespace Agendamento.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Sistema");
-                });
-
-            modelBuilder.Entity("Agendamento.Core.Entities.RegraDisponibilidade", b =>
-                {
-                    b.HasOne("Agendamento.Core.Entities.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("Agendamento.Core.Entities.Rotina", b =>
