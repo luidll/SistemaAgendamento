@@ -36,7 +36,16 @@
                 <input class="form-control" @bind="usuarioAtual.Login" />
             </div>
         </div>
-        
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <label class="form-label">Setor (Obrigatório)</label>
+                <input class="form-control" @bind="usuarioAtual.Setor" placeholder="Ex: GETI, RH" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Ramal (Opcional)</label>
+                <input class="form-control" @bind="usuarioAtual.Ramal" placeholder="Ex: 8888" />
+            </div>
+        </div>
         <div class="row mt-2">
             <div class="col-md-6">
                 <label class="form-label">Senha</label>

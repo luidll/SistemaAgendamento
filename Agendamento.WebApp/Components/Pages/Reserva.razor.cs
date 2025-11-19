@@ -1,6 +1,7 @@
 ﻿using Agendamento.Core.Entities;
 using Agendamento.Infrastructure.Data;
 using Agendamento.WebApp.Services;
+using Agendamento.WebApp.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Entities = Agendamento.Core.Entities;
 

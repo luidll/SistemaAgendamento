@@ -1,4 +1,5 @@
 ﻿using Agendamento.Infrastructure.Data;
+using Agendamento.WebApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Entities = Agendamento.Core.Entities;
 

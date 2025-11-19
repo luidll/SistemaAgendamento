@@ -1,6 +1,6 @@
 ﻿using Agendamento.Core.Entities;
 
-namespace Agendamento.WebApp.Services
+namespace Agendamento.WebApp.Services.Interfaces
 {
     public interface IDisponibilidadeService
     {

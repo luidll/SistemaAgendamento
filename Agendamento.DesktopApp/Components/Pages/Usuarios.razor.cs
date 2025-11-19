@@ -87,7 +87,9 @@ namespace Agendamento.DesktopApp.Components.Pages
                 Email = usuario.Email,
                 Telefone = usuario.Telefone,
                 Login = usuario.Login,
-                SenhaHash = usuario.SenhaHash
+                SenhaHash = usuario.SenhaHash,
+                Setor = usuario.Setor,
+                Ramal = usuario.Ramal
             };
         }
 

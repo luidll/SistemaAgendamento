@@ -16,6 +16,7 @@ namespace Agendamento.Infrastructure.Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Entities.Agendamento> Agendamentos { get; set; }
         public DbSet<RegraDisponibilidade> RegrasDisponibilidade { get; set; }
+        public DbSet<Sala> Salas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

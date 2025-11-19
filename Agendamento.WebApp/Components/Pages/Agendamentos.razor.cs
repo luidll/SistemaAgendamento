@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
+using Agendamento.WebApp.Services.Interfaces;
 
 namespace Agendamento.WebApp.Components.Pages
 {

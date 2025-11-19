@@ -19,7 +19,8 @@ namespace Agendamento.WebApp.Components.Layout
         private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 
         protected string UserInitials { get; set; } = "?";
-        protected List<Modulo> ListaDeModulos { get; set; } = new();
+        protected string UserName { get; set; } = "?";
+        protected Dictionary<Modulo, List<Rotina>> ModulosComRotinas { get; set; } = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -41,12 +42,15 @@ namespace Agendamento.WebApp.Components.Layout
                     if (dadosUsuario != null)
                     {
                         UserInitials = GetInitials(dadosUsuario.NomeCompleto);
+                        UserName = dadosUsuario.NomeCompleto;
 
-                        ListaDeModulos = dadosUsuario.RotinasPermitidas
-                        .Select(r => r.Modulo)
-                        .Where(m => m != null)
-                        .Distinct()
-                        .ToList();
+                        ModulosComRotinas = dadosUsuario.RotinasPermitidas
+                            .Where(r => r.Modulo != null)
+                            .GroupBy(r => r.Modulo!)
+                            .ToDictionary(
+                                g => g.Key,
+                                g => g.ToList()
+                            );
                     }
                 }
             }

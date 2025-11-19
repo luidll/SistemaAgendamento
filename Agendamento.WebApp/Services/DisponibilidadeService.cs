@@ -1,5 +1,6 @@
 ﻿using Agendamento.Core.Entities;
 using Agendamento.Infrastructure.Data;
+using Agendamento.WebApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 

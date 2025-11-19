@@ -1,5 +1,5 @@
 ﻿using Agendamento.Core.Entities;
-using Agendamento.WebApp.Services;
+using Agendamento.WebApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;

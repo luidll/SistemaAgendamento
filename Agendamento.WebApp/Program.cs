@@ -1,6 +1,7 @@
 using Agendamento.Infrastructure.Data;
 using Agendamento.WebApp.Components;
 using Agendamento.WebApp.Services;
+using Agendamento.WebApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
 builder.Services.AddScoped<IDisponibilidadeService, DisponibilidadeService>();
+builder.Services.AddScoped<ISalaService, SalaService>();
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
