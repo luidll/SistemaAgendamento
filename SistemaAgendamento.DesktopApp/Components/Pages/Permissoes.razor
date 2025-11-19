@@ -1,0 +1,62 @@
+﻿@page "/permissoes"
+@layout MainLayout
+
+<h3>Gestão de Permissões</h3>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Selecione o Usuário</h5>
+        <select class="form-select" @onchange="OnUsuarioSelecionado">
+            <option value="0">-- Selecione um usuário para gerenciar --</option>
+            @if (listaUsuarios != null)
+            {
+                @foreach (var u in listaUsuarios)
+                {
+                    <option value="@u.Id">@u.NomeCompleto (@u.Login)</option>
+                }
+            }
+        </select>
+    </div>
+</div>
+
+@if (usuarioAtual != null)
+{
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">
+                Editando permissões de: <strong>@usuarioAtual.NomeCompleto</strong>
+            </h5>
+            <div class="row mt-3">
+                
+                <div class="col-5">
+                    <strong>Rotinas Disponíveis</strong>
+                    <select multiple class="form-control" style="height: 300px;" @bind="rotinasDisponiveisSelecionadas">
+                        @foreach (var r in listaRotinasDisponiveis.OrderBy(r => r.Nome ?? string.Empty))
+                        {
+                            <option value="@r.Id">@r.Nome</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-2 d-flex flex-column justify-content-center align-items-center">
+                    <button class="btn btn-primary mb-2" @onclick="Conceder">
+                        &gt;&gt;
+                    </button>
+                    <button class="btn btn-danger" @onclick="Revogar">
+                        &lt;&lt;
+                    </button>
+                </div>
+
+                <div class="col-5">
+                    <strong>Rotinas Concedidas</strong>
+                    <select multiple class="form-control" style="height: 300px;" @bind="rotinasConcedidasSelecionadas">
+                        @foreach (var r in listaRotinasConcedidas.OrderBy(r => r.Nome ?? string.Empty))
+                        {
+                            <option value="@r.Id">@r.Nome</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+}

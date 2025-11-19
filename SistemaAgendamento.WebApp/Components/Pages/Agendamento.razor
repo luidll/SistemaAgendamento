@@ -1,0 +1,71 @@
+﻿@page "/agendamento"
+@layout MainLayout
+
+@using System.Linq
+
+<h3>Módulo Agendamento: Selecione a Sala</h3>
+<p class="text-muted">Escolha a sala que deseja reservar e visualize os horários disponíveis.</p>
+
+@if (!string.IsNullOrEmpty(MensagemStatus))
+{
+    <div class="alert alert-danger">@MensagemStatus</div>
+}
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-3">
+    @if (ListaDeSalas.Any())
+    {
+        @foreach (var sala in ListaDeSalas)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm sala-card">
+
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-start mb-3">
+                            <div class="sala-image-placeholder me-3" style="background-image: url(@sala.ImagemUrl)">
+                                @if (string.IsNullOrEmpty(sala.ImagemUrl))
+                                {
+                                    <i class="bi bi-camera-fill display-5 text-muted"></i>
+                                }
+                            </div>
+
+                            <div>
+                                <h5 class="card-title mb-0">SALA: @sala.Nome</h5>
+                                <p class="card-text text-muted small">Capacidade: @sala.Capacidade pessoas</p>
+                            </div>
+                        </div>
+
+                        <p><strong>Localização:</strong> @sala.Localizacao</p>
+                        <p class="text-truncate" style="max-height: 2.8em;">@sala.Descricao</p>
+
+                        <div class="mt-auto text-end">
+                            <button class="btn btn-success" @onclick="() => AbrirFormularioDeReserva(sala.Id)">
+                                Agendar <i class="bi bi-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="alert alert-info">Nenhuma sala cadastrada. Peça a um administrador para cadastrar as salas.</div>
+        </div>
+    }
+</div>
+
+<style>
+    .sala-image-placeholder {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        background-color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-size: cover;
+        background-position: center;
+        filter: blur(2px);
+    }
+</style>

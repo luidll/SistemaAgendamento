@@ -1,0 +1,110 @@
+﻿@page "/reserva/{SalaId:int}"
+@layout EmptyLayout
+
+@using System.Linq
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="container-fluid py-5">
+
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1>Reservar Sala: @(SalaTarget?.Nome ?? "Carregando...")</h1>
+            <p class="text-muted">Localização: @SalaTarget?.Localizacao</p>
+        </div>
+    </div>
+
+    @if (SalaTarget == null)
+    {
+        <div class="alert alert-danger">Sala de reunião não encontrada ou ID inválido.</div>
+    }
+    else
+    {
+        <div class="row justify-content-center">
+
+            <div class="col-md-5">
+                <div class="card shadow-sm p-4">
+                    <h5 class="card-title mb-3">Escolha a Data</h5>
+
+                    <input type="date" class="form-control mb-4"
+                           @bind="SelectedDate"
+                           @bind:after="LoadAvailableSlots" />
+
+                    @if (AvailableSlots.Any())
+                    {
+                        <h5 class="mb-3">Horários Disponíveis (@SelectedDate.ToString("dd/MM"))</h5>
+                        <div class="slot-grid">
+                            @foreach (var slot in AvailableSlots)
+                            {
+                                <button type="button" class="btn @(SelectedSlot == slot ? "btn-primary" : "btn-outline-primary") slot-item"
+                                        @onclick="() => SelectSlot(slot)">
+                                    @slot.ToString("HH:mm")
+                                </button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">Não há horários disponíveis nesta data.</div>
+                    }
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card shadow-sm p-4">
+
+                    @if (SelectedSlot.HasValue)
+                    {
+                        <h5 class="card-title mb-3 text-success">
+                            Confirmar: @SelectedSlot.Value.ToString("dd/MM - HH:mm")
+                        </h5>
+
+                        <EditForm Model="agendamentoFinal" OnValidSubmit="HandleBooking" FormName="FinalBookingForm">
+                            <DataAnnotationsValidator />
+
+                            <div class="mb-3">
+                                <label class="form-label">Seu Nome/Email (Título)</label>
+                                <InputText @bind-Value="agendamentoFinal.Titulo" class="form-control" placeholder="Seu nome ou email para contato" />
+                                <ValidationMessage For="@(() => agendamentoFinal.Titulo)" class="text-danger" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Motivo/Descrição</label>
+                                <InputTextArea @bind-Value="agendamentoFinal.Descricao" class="form-control" rows="3" />
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(mensagemStatus))
+                            {
+                                <div class="alert @(mensagemStatus.Contains("sucesso") ? "alert-success" : "alert-info") mt-3">@mensagemStatus</div>
+                            }
+
+                            <button type="submit" class="btn btn-success w-100">
+                                <span class="bi bi-check-circle"></span> Confirmar Reserva
+                            </button>
+                        </EditForm>
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted">Selecione um horário à esquerda para finalizar a reserva.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .slot-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        max-height: 350px;
+        overflow-y: auto;
+        padding: 5px;
+    }
+
+    .slot-item {
+        font-weight: 500;
+        font-size: 0.9em;
+    }
+</style>
