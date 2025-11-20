@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SistemaAgendamento.Application.DTOs.Requests;
 using SistemaAgendamento.Application.DTOs.Responses;
-using SistemaAgendamento.Application.Services;
+using SistemaAgendamento.Application.Interfaces;
 
 namespace SistemaAgendamento.DesktopApp.Components.Pages
 {
     public partial class Usuarios
     {
         [Inject]
-        private UsuarioService UsuarioService { get; set; } = null!;
+        private IUsuarioService UsuarioService { get; set; } = null!;
 
         private List<UsuarioResponse> listaUsuarios = new();
         private UsuarioRequest usuarioAtual = new();

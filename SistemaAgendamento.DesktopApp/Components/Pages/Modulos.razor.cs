@@ -2,21 +2,28 @@
 using SistemaAgendamento.Application.DTOs.Requests;
 using SistemaAgendamento.Application.DTOs.Responses;
 using SistemaAgendamento.Application.Interfaces;
+using SistemaAgendamento.Application.Services;
 
 namespace SistemaAgendamento.DesktopApp.Components.Pages
 {
     public partial class Modulos
     {
         [Inject] private IModuloService ModuloService { get; set; } = null!;
+        [Inject] private ISistemaService SistemaService { get; set; } = null!;
 
         private List<ModuloResponse> listaModulos = new();
+        private List<SistemaResponse> listaSistemas = new();
         private ModuloRequest moduloAtual = new();
 
         protected override async Task OnInitializedAsync()
         {
+            await LoadModulos();
+            listaSistemas = await SistemaService.GetAllAsync();
+        }
+        private async Task LoadModulos()
+        {
             listaModulos = await ModuloService.GetAllAsync();
         }
-
         private async Task Salvar()
         {
             if (moduloAtual.SistemaId == 0)
@@ -25,7 +32,9 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
             await ModuloService.AddOrUpdateAsync(moduloAtual);
 
             moduloAtual = new();
-            listaModulos = await ModuloService.GetAllAsync();
+            LimparFormulario();
+            await LoadModulos();
+            StateHasChanged();
         }
 
         private void CarregarParaEdicao(ModuloResponse modulo)
@@ -44,7 +53,7 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
         private async Task Deletar(int id)
         {
             await ModuloService.DeleteAsync(id);
-            listaModulos = await ModuloService.GetAllAsync();
+            await LoadModulos();
         }
 
         private void LimparFormulario()

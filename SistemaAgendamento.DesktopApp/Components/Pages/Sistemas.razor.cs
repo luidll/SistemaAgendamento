@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SistemaAgendamento.Application.DTOs.Requests;
 using SistemaAgendamento.Application.DTOs.Responses;
+using SistemaAgendamento.Application.Interfaces;
 using SistemaAgendamento.Application.Services;
 
 namespace SistemaAgendamento.DesktopApp.Components.Pages
@@ -8,7 +9,7 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
     public partial class Sistemas
     {
         [Inject]
-        private SistemaService Service { get; set; } = null!;
+        private ISistemaService Service { get; set; } = null!;
 
         private List<SistemaResponse> listaSistemas = new();
         private SistemaRequest sistemaAtual = new();
@@ -26,15 +27,7 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
 
         private async Task Salvar()
         {
-            if (sistemaEditandoId == null)
-            {
-                await Service.AddAsync(sistemaAtual);
-            }
-            else
-            {
-                await Service.UpdateAsync(sistemaEditandoId.Value, sistemaAtual);
-            }
-
+            await Service.AddOrUpdateAsync(sistemaAtual);
             LimparFormulario();
             await LoadSistemas();
         }

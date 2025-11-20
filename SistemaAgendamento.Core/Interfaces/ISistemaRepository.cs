@@ -13,6 +13,6 @@ namespace SistemaAgendamento.Application.Interfaces
         Task<Sistema?> GetByIdAsync(int id);
         Task AddAsync(Sistema sistema);
         Task UpdateAsync(Sistema sistema);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(Sistema sistema);
     }
 }

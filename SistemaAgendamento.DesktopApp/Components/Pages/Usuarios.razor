@@ -101,10 +101,13 @@
                             <td>@u.Login</td>
                             <td>@u.Email</td>
                             <td>
-                                <button class="btn btn-sm btn-outline-primary" @onclick="() => CarregarParaEdicao(u)">
+                                <button class="btn btn-sm btn-outline-primary me-1" @onclick="() => CarregarParaEdicao(u)">
                                     <span class="bi bi-pencil-square"></span> Editar
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger" @onclick="() => Deletar(u)">
+                                <button class="btn btn-sm btn-outline-warning me-1" @onclick="() => ResetarSenha(u)" title="Resetar Senha para 123456">
+                                    <span class="bi bi-key-fill"></span> Resetar Senha
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger me-1" @onclick="() => Deletar(u)">
                                     <span class="bi bi-trash"></span> Deletar
                                 </button>
                             </td>

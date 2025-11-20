@@ -20,7 +20,7 @@
                     {
                         @foreach (var m in listaModulos)
                         {
-                            <option value="@m.Id">@($"{m.Sistema?.Nome} - {m.Nome}")</option>
+                            <option value="@m.Id">@($"{m.SistemaNome} - {m.Nome}")</option>
                         }
                     }
                 </select>
@@ -76,7 +76,7 @@
                         <tr>
                             <td>@r.Id</td>
                             <td>@r.Nome</td>
-                            <td>@($"{r.Modulo?.Sistema?.Nome} / {r.Modulo?.Nome}")</td>
+                            <td>@($"{r.SistemaNome} / {r.ModuloNome}")</td>
                             <td>
                                 @if (r.Ativo)
                                 {
@@ -91,7 +91,7 @@
                                 <button class="btn btn-sm btn-outline-primary" @onclick="() => CarregarParaEdicao(r)">
                                     <span class="bi bi-pencil-square"></span> Editar
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger" @onclick="() => Deletar(r)">
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => Deletar(r.Id)">
                                     <span class="bi bi-trash"></span> Deletar
                                 </button>
                             </td>

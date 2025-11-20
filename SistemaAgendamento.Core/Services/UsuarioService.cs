@@ -5,7 +5,7 @@ using SistemaAgendamento.Application.Interfaces;
 using SistemaAgendamento.Domain.Entities;
 namespace SistemaAgendamento.Application.Services
 {
-    public class UsuarioService
+    public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _repo;
         private readonly IRotinaRepository _rotinaRepo;

@@ -19,7 +19,7 @@ namespace SistemaAgendamento.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<RotinaResponse>> ListarAsync()
+        public async Task<List<RotinaResponse>> GetAllAsync()
         {
             var rotinas = await _repo.GetAllAsync();
             return _mapper.Map<List<RotinaResponse>>(rotinas);
@@ -31,27 +31,24 @@ namespace SistemaAgendamento.Application.Services
             return _mapper.Map<List<RotinaResponse>>(rotinas);
         }
 
-        public async Task<RotinaResponse?> ObterPorIdAsync(int id)
+        public async Task<RotinaResponse?> GetByIdAsync(int id)
         {
             var rotina = await _repo.GetByIdAsync(id);
             return rotina == null ? null : _mapper.Map<RotinaResponse>(rotina);
         }
 
-        public async Task<RotinaResponse> CriarAsync(RotinaRequest dto)
+        public async Task<int> AddOrUpdateAsync(RotinaRequest request)
         {
-            var rotina = _mapper.Map<Rotina>(dto);
-            await _repo.AddAsync(rotina);
-            return _mapper.Map<RotinaResponse>(rotina);
-        }
-
-        public async Task<RotinaResponse?> AtualizarAsync(int id, RotinaRequest dto)
-        {
-            var rotina = await _repo.GetByIdAsync(id);
-            if (rotina == null) return null;
-
-            _mapper.Map(dto, rotina);
-            await _repo.UpdateAsync(rotina);
-            return _mapper.Map<RotinaResponse>(rotina);
+            var rotina = _mapper.Map<Rotina>(request);
+            if(rotina.Id > 0)
+            {
+                await _repo.UpdateAsync(rotina);
+            }
+            else
+            {
+                await _repo.AddAsync(rotina);
+            }
+            return rotina.Id;
         }
 
         public async Task<bool> DeletarAsync(int id)

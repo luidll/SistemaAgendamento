@@ -1,7 +1,10 @@
-﻿using SistemaAgendamento.Domain.Entities;
-using SistemaAgendamento.Infrastructure.Data;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using SistemaAgendamento.Application.DTOs.Requests;
+using SistemaAgendamento.Application.DTOs.Responses;
+using SistemaAgendamento.Application.Interfaces;
+using SistemaAgendamento.Domain.Entities;
+using SistemaAgendamento.Infrastructure.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,11 +14,13 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
     public partial class Rotinas
     {
         [Inject]
-        private AppDbContext DbContext { get; set; } = null!;
+        private IModuloService ModuloService { get; set; } = null!;
+        [Inject]
+        private IRotinaService RotinaService { get; set; } = null!;
 
-        private List<Rotina> listaRotinas = new List<Rotina>();
-        private List<Modulo> listaModulos = new List<Modulo>();
-        private Rotina rotinaAtual = new();
+        private List<RotinaResponse> listaRotinas = new List<RotinaResponse>();
+        private List<ModuloResponse> listaModulos = new List<ModuloResponse>();
+        private RotinaRequest rotinaAtual = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -24,19 +29,12 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
         }
         private async Task LoadRotinas()
         {
-            listaRotinas = await DbContext.Rotinas
-                                          .Include(r => r.Modulo)
-                                            .ThenInclude(m => m.Sistema)
-                                          .AsNoTracking()
-                                          .ToListAsync();
+            listaRotinas = await RotinaService.GetAllAsync();
         }
 
         private async Task LoadModulos()
         {
-            listaModulos = await DbContext.Modulos
-                                          .Where(m => m.Ativo)
-                                          .Include(m => m.Sistema)
-                                          .ToListAsync();
+            listaModulos = await ModuloService.GetAllAsync();
         }
 
         private async Task Salvar()
@@ -46,24 +44,16 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
                 return;
             }
 
-            if (rotinaAtual.Id == 0)
-            {
-                DbContext.Rotinas.Add(rotinaAtual);
-            }
-            else
-            {
-                DbContext.Rotinas.Update(rotinaAtual);
-            }
+            await RotinaService.AddOrUpdateAsync(rotinaAtual);
 
-            await DbContext.SaveChangesAsync();
             LimparFormulario();
             await LoadRotinas();
             StateHasChanged();
         }
 
-        private void CarregarParaEdicao(Rotina rotina)
+        private void CarregarParaEdicao(RotinaResponse rotina)
         {
-            rotinaAtual = new Rotina
+            rotinaAtual = new RotinaRequest
             {
                 Id = rotina.Id,
                 Nome = rotina.Nome,
@@ -72,10 +62,9 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
             };
         }
 
-        private async Task Deletar(Rotina rotina)
+        private async Task Deletar(int id)
         {
-            DbContext.Rotinas.Remove(rotina);
-            await DbContext.SaveChangesAsync();
+            await RotinaService.DeletarAsync(id);
             await LoadRotinas();
         }
 

@@ -6,7 +6,7 @@ using SistemaAgendamento.Domain.Entities;
 
 namespace SistemaAgendamento.Application.Services
 {
-    public class SistemaService
+    public class SistemaService : ISistemaService
     {
         private readonly ISistemaRepository _repository;
         private readonly IMapper _mapper;
@@ -29,25 +29,25 @@ namespace SistemaAgendamento.Application.Services
             return _mapper.Map<SistemaResponse?>(sistema);
         }
 
-        public async Task<int> AddAsync(SistemaRequest request)
+        public async Task<int> AddOrUpdateAsync(SistemaRequest request)
         {
             var sistema = _mapper.Map<Sistema>(request);
-            await _repository.AddAsync(sistema);
+
+            if (sistema.Id == 0)
+                await _repository.AddAsync(sistema);
+            else
+                await _repository.UpdateAsync(sistema);
+
             return sistema.Id;
-        }
-
-        public async Task UpdateAsync(int id, SistemaRequest request)
-        {
-            var sistema = await _repository.GetByIdAsync(id);
-            if (sistema == null) return;
-
-            _mapper.Map(request, sistema);
-            await _repository.UpdateAsync(sistema);
         }
 
         public async Task DeleteAsync(int id)
         {
-            await _repository.DeleteAsync(id);
+            var sistema = await _repository.GetByIdAsync(id);
+            if (sistema != null)
+            {
+                await _repository.DeleteAsync(sistema);
+            }
         }
     }
 }

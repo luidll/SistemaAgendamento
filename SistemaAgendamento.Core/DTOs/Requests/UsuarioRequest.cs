@@ -1,4 +1,6 @@
-﻿namespace SistemaAgendamento.Application.DTOs.Requests
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SistemaAgendamento.Application.DTOs.Requests
 {
     public class UsuarioRequest
     {
@@ -9,7 +11,7 @@
         public string? Telefone { get; set; }
         public string? Setor { get; set; }
         public string? Ramal { get; set; }
-
+        public string Cpf { get; set; } = string.Empty;
         public string? Senha { get; set; }
         public string? ConfirmarSenha { get; set; }
     }

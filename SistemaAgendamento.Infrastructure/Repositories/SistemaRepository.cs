@@ -36,14 +36,10 @@ namespace SistemaAgendamento.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Sistema sistema)
         {
-            var sistema = await _context.Sistemas.FindAsync(id);
-            if (sistema != null)
-            {
-                _context.Sistemas.Remove(sistema);
-                await _context.SaveChangesAsync();
-            }
+            _context.Sistemas.Remove(sistema);
+            await _context.SaveChangesAsync();
         }
     }
 }

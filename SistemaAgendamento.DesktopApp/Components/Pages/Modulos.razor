@@ -91,7 +91,7 @@
                         <tr>
                             <td>@m.Id</td>
                             <td>@m.Nome</td>
-                            <td>@m.Sistema?.Nome</td>
+                            <td>@m.SistemaNome</td>
                             <td>@m.Url</td>
                             <td><i class="@m.Icon"></i> @m.Icon</td>
                             <td>
@@ -108,7 +108,7 @@
                                 <button class="btn btn-sm btn-outline-primary me-1" @onclick="() => CarregarParaEdicao(m)">
                                     <span class="bi bi-pencil-square"></span> Editar
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger" @onclick="() => Deletar(m)">
+                                <button class="btn btn-sm btn-outline-danger" @onclick="() => Deletar(m.Id)">
                                     <span class="bi bi-trash"></span> Deletar
                                 </button>
                             </td>
