@@ -22,12 +22,6 @@
 
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                        <li class="nav-item">
-                            <NavLink class="nav-link" style="color: black !important;" href="/dashboard">
-                                <i class="fa fa-home text-center"></i> Dashboard
-                            </NavLink>
-                        </li>
-
                         @if (ModulosComRotinas.Any())
                         {
                             @foreach (var kvp in ModulosComRotinas)
@@ -36,7 +30,7 @@
 
                                     <a class="nav-link dropdown-toggle"
                                        style="color: black !important;"
-                                       href="#"
+                                       href=""
                                        id="@("dropdown-" + kvp.Key.Id)"
                                        role="button"
                                        data-bs-toggle="dropdown"

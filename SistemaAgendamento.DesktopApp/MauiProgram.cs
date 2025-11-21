@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using SistemaAgendamento.Application.Interfaces;
-using SistemaAgendamento.Application.Interfaces.Repositories;
-using SistemaAgendamento.Application.Mappings;
-using SistemaAgendamento.Application.Mappings.Profiles;
-using SistemaAgendamento.Application.Services;
 using SistemaAgendamento.DesktopApp.Extensions;
 using SistemaAgendamento.Infrastructure.Data;
-using SistemaAgendamento.Infrastructure.Repositories;
 
 namespace SistemaAgendamento.DesktopApp
 {

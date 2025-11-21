@@ -14,8 +14,8 @@ namespace SistemaAgendamento.Infrastructure.Data
         public DbSet<Rotina> Rotinas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Agendamento> Agendamentos { get; set; }
-        public DbSet<RegraDisponibilidade> RegrasDisponibilidade { get; set; }
         public DbSet<Sala> Salas { get; set; }
+        public DbSet<Solicitacao> Solicitacoes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,10 +31,23 @@ namespace SistemaAgendamento.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(a => a.UsuarioId);
 
-            modelBuilder.Entity<RegraDisponibilidade>()
-    .HasOne(r => r.Usuario)
-    .WithMany()
-    .HasForeignKey(r => r.UsuarioId);
+            modelBuilder.Entity<Solicitacao>()
+            .HasOne(s => s.Solicitante)
+            .WithMany()
+            .HasForeignKey(s => s.SolicitanteId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Solicitacao>()
+            .HasOne(s => s.Solicitado)
+            .WithMany()
+            .HasForeignKey(s => s.SolicitadoId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Solicitacao>()
+            .HasOne(s => s.Agendamento)
+            .WithMany()
+            .HasForeignKey(s => s.AgendamentoId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

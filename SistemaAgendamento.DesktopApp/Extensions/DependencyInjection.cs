@@ -2,12 +2,14 @@
 using System.Reflection;
 using System.Linq;
 using System.Diagnostics;
+using System;
 
-// USINGS PARA REFERÊNCIA
-using SistemaAgendamento.Application.Interfaces; // Ex: ISistemaService
-using SistemaAgendamento.Application.Services;   // Ex: SistemaService (Agora aqui!)
-using SistemaAgendamento.Infrastructure.Repositories; // Ex: SistemaRepository
-using SistemaAgendamento.Application.Mappings.Profiles;
+// Usings para referenciar os assemblies necessários
+using SistemaAgendamento.Application.Interfaces.Desktop; // Referência para as Interfaces (Desktop)
+using SistemaAgendamento.Infrastructure.Services.Desktop;  // Referência para as Implementações (Desktop)
+using SistemaAgendamento.Infrastructure.Repositories.Desktop; // Referência para os Repositórios (Desktop)
+using SistemaAgendamento.Application.Mappings.Profiles.Desktop; // Referência para os Profiles (Desktop)
+
 
 namespace SistemaAgendamento.DesktopApp.Extensions
 {
@@ -15,46 +17,38 @@ namespace SistemaAgendamento.DesktopApp.Extensions
     {
         public static void RegisterApplicationServices(this IServiceCollection services)
         {
+            var interfaceAssembly = typeof(IUsuarioService).Assembly;
+
+            var implementationAssembly = typeof(UsuarioRepository).Assembly;
+
             services.AddAutoMapper(typeof(ModuloProfile).Assembly);
 
-            var applicationAssembly = typeof(SistemaService).Assembly;
+            Debug.WriteLine($"[DI] Interfaces buscadas em: {interfaceAssembly.GetName().Name}");
+            Debug.WriteLine($"[DI] Implementações buscadas em: {implementationAssembly.GetName().Name}");
 
-            var infrastructureAssembly = typeof(SistemaRepository).Assembly;
 
-            Debug.WriteLine($"[DI] Services serão buscados em: {applicationAssembly.GetName().Name}");
-            Debug.WriteLine($"[DI] Repositories serão buscados em: {infrastructureAssembly.GetName().Name}");
-
-            var serviceImplementations = applicationAssembly.GetExportedTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.Name.EndsWith("Service"))
+            var targetInterfaces = interfaceAssembly.GetExportedTypes()
+                .Where(t => t.IsInterface &&
+                           (t.Name.EndsWith("Service") || t.Name.EndsWith("Repository")))
                 .ToList();
 
-            foreach (var impl in serviceImplementations)
-            {
-                var iface = impl.GetInterface($"I{impl.Name}");
-                if (iface != null)
-                {
-                    services.AddScoped(iface, impl);
-                    Debug.WriteLine($"[DI] Service Registrado: {iface.Name} -> {impl.Name}");
-                }
-            }
-            var repoImplementations = infrastructureAssembly.GetExportedTypes()
-                .Where(t => t.IsClass && !t.IsAbstract && t.Name.EndsWith("Repository"))
+            var targetImplementations = implementationAssembly.GetExportedTypes()
+                .Where(t => t.IsClass && !t.IsAbstract)
                 .ToList();
 
-            foreach (var impl in repoImplementations)
+            foreach (var interfaceType in targetInterfaces)
             {
-                var iface = impl.GetInterface($"I{impl.Name}");
+                var implementationType = targetImplementations
+                    .FirstOrDefault(c => interfaceType.IsAssignableFrom(c));
 
-                if (iface == null)
+                if (implementationType != null)
                 {
-                    iface = applicationAssembly.GetExportedTypes()
-                       .FirstOrDefault(i => i.IsInterface && i.Name == $"I{impl.Name}");
+                    services.AddScoped(interfaceType, implementationType);
+                    Debug.WriteLine($"[DI] Sucesso: {interfaceType.Name} -> {implementationType.Name}");
                 }
-
-                if (iface != null)
+                else
                 {
-                    services.AddScoped(iface, impl);
-                    Debug.WriteLine($"[DI] Repository Registrado: {iface.Name} -> {impl.Name}");
+                    Debug.WriteLine($"[DI] FALHA DE REGISTRO: Implementação não encontrada para {interfaceType.Name}");
                 }
             }
         }

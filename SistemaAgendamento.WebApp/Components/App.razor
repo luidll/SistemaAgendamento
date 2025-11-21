@@ -1,8 +1,4 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
+﻿<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
@@ -18,21 +14,19 @@
     <HeadOutlet />
 </head>
 
-...
 <body>
-    <CascadingAuthenticationState>
+    <Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
         <Router AppAssembly="@typeof(App).Assembly">
             <Found Context="routeData">
-                <RouteView RouteData="@routeData" />
+
+                <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+
             </Found>
 
             <NotFound>
                 <p>Página não encontrada.</p>
             </NotFound>
         </Router>
-    </CascadingAuthenticationState>
+    </Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
     <script src="_framework/blazor.web.js"></script>
 </body>
-...
-
-</html>

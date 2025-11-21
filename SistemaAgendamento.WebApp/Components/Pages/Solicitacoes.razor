@@ -1,0 +1,114 @@
+﻿@page "/solicitacoes"
+@layout MainLayout
+
+@using SistemaAgendamento.Domain.Enums
+
+<div class="container-fluid">
+    <h3 class="mb-4">Central de Solicitações</h3>
+
+    @if (!string.IsNullOrEmpty(MensagemStatus))
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            @MensagemStatus
+            <button type="button" class="btn-close" @onclick="() => MensagemStatus = null"></button>
+        </div>
+    }
+
+    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="recebidas-tab" data-bs-toggle="tab" data-bs-target="#recebidas" type="button" role="tab">
+                <i class="fa fa-inbox me-2"></i> Recebidas
+                @if (Recebidas.Any(r => r.Status == StatusSolicitacao.Pendente))
+                {
+                    <span class="badge bg-danger ms-1">!</span>
+                }
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="enviadas-tab" data-bs-toggle="tab" data-bs-target="#enviadas" type="button" role="tab">
+                <i class="fa fa-paper-plane me-2"></i> Enviadas
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade show active" id="recebidas" role="tabpanel">
+            @if (!Recebidas.Any())
+            {
+                <p class="text-muted mt-3">Nenhuma solicitação recebida.</p>
+            }
+            else
+            {
+                <div class="list-group mt-3">
+                    @foreach (var item in Recebidas)
+                    {
+                        <div class="list-group-item list-group-item-action flex-column align-items-start shadow-sm mb-2 border rounded">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">@item.SolicitanteNome deseja seu horário na <strong>@item.SalaNome</strong></h5>
+                                <small class="text-muted">@item.DataSolicitacao.ToString("dd/MM HH:mm")</small>
+                            </div>
+                            <p class="mb-1">
+                                <strong>Data do Agendamento:</strong> @item.DataHoraInicio.ToString("dd/MM/yyyy HH:mm") <br />
+                                <strong>Motivo:</strong> @item.Justificativa
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="badge bg-@GetStatusColor(item.Status)">@item.Status</span>
+
+                                @if (item.Status == StatusSolicitacao.Pendente)
+                                {
+                                    <div>
+                                        <button class="btn btn-success btn-sm me-2" @onclick="() => Aceitar(item.Id)">
+                                            <i class="fa fa-check"></i> Aceitar Troca
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" @onclick="() => Recusar(item.Id)">
+                                            <i class="fa fa-times"></i> Recusar
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="tab-pane fade" id="enviadas" role="tabpanel">
+            @if (!Enviadas.Any())
+            {
+                <p class="text-muted mt-3">Você não fez nenhuma solicitação.</p>
+            }
+            else
+            {
+                <div class="table-responsive mt-3">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Sala</th>
+                                <th>Data Solicitada</th>
+                                <th>Dono Atual</th>
+                                <th>Status</th>
+                                <th>Data do Pedido</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Enviadas)
+                            {
+                                <tr>
+                                    <td>@item.SalaNome</td>
+                                    <td>@item.DataHoraInicio.ToString("dd/MM HH:mm")</td>
+                                    <td>@item.SolicitadoNome</td>
+                                    <td>
+                                        <span class="badge bg-@GetStatusColor(item.Status)">@item.Status</span>
+                                    </td>
+                                    <td>@item.DataSolicitacao.ToString("dd/MM")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

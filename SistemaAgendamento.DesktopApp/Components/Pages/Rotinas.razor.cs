@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
-using SistemaAgendamento.Application.DTOs.Requests;
-using SistemaAgendamento.Application.DTOs.Responses;
-using SistemaAgendamento.Application.Interfaces;
+using SistemaAgendamento.Application.DTOs.Requests.Desktop;
+using SistemaAgendamento.Application.DTOs.Responses.Desktop;
+using SistemaAgendamento.Application.Interfaces.Desktop;
 using SistemaAgendamento.Domain.Entities;
 using SistemaAgendamento.Infrastructure.Data;
 using System.Collections.Generic;

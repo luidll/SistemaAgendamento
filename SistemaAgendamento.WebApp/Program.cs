@@ -1,9 +1,10 @@
-using SistemaAgendamento.Infrastructure.Data;
-using SistemaAgendamento.WebApp.Components;
-using SistemaAgendamento.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using SistemaAgendamento.Application.Interfaces;
+using SistemaAgendamento.Application.Interfaces.Web;
+using SistemaAgendamento.Infrastructure.Data;
+using SistemaAgendamento.Infrastructure.Services.Web;
+using SistemaAgendamento.WebApp.Components;
+using SistemaAgendamento.WebApp.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +18,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
     });
 
-builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
-builder.Services.AddScoped<IDisponibilidadeService, DisponibilidadeService>();
-builder.Services.AddScoped<ISalaService, SalaService>();
+#region
+builder.Services.RegisterApplicationServices();
+#endregion
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();

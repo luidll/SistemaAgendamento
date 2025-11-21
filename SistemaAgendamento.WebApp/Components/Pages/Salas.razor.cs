@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using SistemaAgendamento.Application.DTOs.Requests;
-using SistemaAgendamento.Application.DTOs.Responses;
-using SistemaAgendamento.Application.Interfaces;
+using SistemaAgendamento.Application.DTOs.Requests.Desktop;
+using SistemaAgendamento.Application.DTOs.Responses.Desktop;
+using SistemaAgendamento.Application.Interfaces.Web;
 
 namespace SistemaAgendamento.WebApp.Components.Pages
 {

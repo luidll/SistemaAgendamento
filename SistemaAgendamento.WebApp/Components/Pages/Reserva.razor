@@ -36,12 +36,47 @@
                         <div class="slot-grid">
                             @foreach (var slot in AvailableSlots)
                             {
-                                <button type="button" class="btn @(SelectedSlot == slot ? "btn-primary" : "btn-outline-primary") slot-item"
-                                        @onclick="() => SelectSlot(slot)">
-                                    @slot.ToString("HH:mm")
-                                </button>
+                                @if (slot.IsAvailable)
+                                {
+                                    <button type="button" class="btn @(SelectedSlot == slot.Time ? "btn-success" : "btn-outline-success") slot-item"
+                                            @onclick="() => SelectSlot(slot.Time)">
+                                        @slot.Time.ToString("HH:mm")
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-outline-danger slot-item"
+                                            title="Ocupado. Clique para solicitar troca."
+                                            @onclick="() => AbrirSolicitacao(slot.ExistingAgendamentoId!.Value, slot.Time)">
+                                        @slot.Time.ToString("HH:mm") <i class="fa fa-exchange-alt ms-1"></i>
+                                    </button>
+                                }
                             }
                         </div>
+                        @if (showSolicitacaoModal)
+                        {
+                            <div class="modal-backdrop fade show"></div>
+                            <div class="modal fade show d-block" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-warning text-dark">
+                                            <h5 class="modal-title">Solicitar Horário: @horarioSolicitado?.ToString("HH:mm")</h5>
+                                            <button type="button" class="btn-close" @onclick="FecharModal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Este horário está ocupado. Deseja pedir ao dono para ceder o horário?</p>
+
+                                            <label class="form-label">Motivo da solicitação:</label>
+                                            <textarea class="form-control" @bind="solicitacaoAtual.Justificativa" rows="3" placeholder="Ex: Preciso deste horário para uma reunião urgente com a diretoria..."></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
+                                            <button type="button" class="btn btn-warning" @onclick="EnviarSolicitacao">Enviar Pedido</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     }
                     else
                     {

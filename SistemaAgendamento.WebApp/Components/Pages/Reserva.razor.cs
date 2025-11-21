@@ -1,27 +1,26 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using SistemaAgendamento.Application.DTOs.Responses;
-using SistemaAgendamento.Application.Interfaces;
-using SistemaAgendamento.Domain.Entities;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Linq;
+using SistemaAgendamento.Application.DTOs.Requests.Web;
+using SistemaAgendamento.Application.DTOs.Responses.Desktop;
+using SistemaAgendamento.Application.DTOs.Responses.Web;
+using SistemaAgendamento.Application.Interfaces.Web;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace SistemaAgendamento.WebApp.Components.Pages
 {
     public partial class Reserva : ComponentBase
     {
         [Inject]
-        private IDisponibilidadeService DisponibilidadeService { get; set; } = null!;
+        private IDisponibilidadeService _disponibilidadeService { get; set; } = null!;
 
         [Inject]
-        private IAgendamentoService AgendamentoService { get; set; } = null!;
+        private IAgendamentoService _agendamentoService { get; set; } = null!;
 
         [Inject]
-        private ISalaService SalaService { get; set; } = null!;
+        private ISolicitacaoService SolicitacaoService { get; set; } = null!;
+
+        [Inject]
+        private ISalaService _salaService { get; set; } = null!;
 
         [Inject]
         private AuthenticationStateProvider AuthStateProvider { get; set; } = null!;
@@ -33,15 +32,18 @@ namespace SistemaAgendamento.WebApp.Components.Pages
         protected int ClienteUsuarioId;
 
         protected DateTime SelectedDate { get; set; } = DateTime.Today;
-        protected List<DateTime> AvailableSlots { get; set; } = new();
+        protected List<TimeSlotResponse> AvailableSlots { get; set; } = new();
         protected DateTime? SelectedSlot { get; set; }
-        protected Agendamento agendamentoFinal { get; set; } = new Agendamento();
+        protected AgendamentoRequest agendamentoFinal { get; set; } = new AgendamentoRequest();
         protected string? mensagemStatus;
         private int SlotDurationMinutes => 30;
+        protected bool showSolicitacaoModal { get; set; } = false;
+        protected SolicitacaoRequest solicitacaoAtual { get; set; } = new();
+        protected DateTime? horarioSolicitado { get; set; }
 
         protected override async Task OnParametersSetAsync()
         {
-            SalaTarget = await SalaService.GetByIdAsync(SalaId);
+            SalaTarget = await _salaService.GetByIdAsync(SalaId);
 
             var authState = await AuthStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
@@ -59,7 +61,7 @@ namespace SistemaAgendamento.WebApp.Components.Pages
         {
             if (SalaTarget == null) return;
 
-            AvailableSlots = await DisponibilidadeService.GenerateTimeSlots(SalaId, SelectedDate);
+            AvailableSlots = await _disponibilidadeService.GenerateTimeSlots(SalaId, SelectedDate);
             SelectedSlot = null;
         }
 
@@ -89,11 +91,11 @@ namespace SistemaAgendamento.WebApp.Components.Pages
                     return;
                 }
 
-                await AgendamentoService.AddAsync(agendamentoFinal);
+                await _agendamentoService.AddOrUpdateAsync(agendamentoFinal);
 
                 mensagemStatus = $"Agendamento da sala {SalaTarget?.Nome} confirmado para {SelectedSlot.Value.ToString("dd/MM - HH:mm")}!";
 
-                agendamentoFinal = new Agendamento { SalaId = SalaId, UsuarioId = ClienteUsuarioId };
+                agendamentoFinal = new AgendamentoRequest { SalaId = SalaId, UsuarioId = ClienteUsuarioId };
                 await LoadAvailableSlots();
             }
             catch (Exception ex)
@@ -101,5 +103,35 @@ namespace SistemaAgendamento.WebApp.Components.Pages
                 mensagemStatus = $"Erro ao confirmar agendamento: {ex.Message}";
             }
         }
+        protected void AbrirSolicitacao(int agendamentoId, DateTime horario)
+        {
+            solicitacaoAtual = new SolicitacaoRequest { AgendamentoId = agendamentoId };
+            horarioSolicitado = horario;
+            showSolicitacaoModal = true;
+            mensagemStatus = null;
+        }
+
+        protected async Task EnviarSolicitacao()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(solicitacaoAtual.Justificativa))
+                {
+                    mensagemStatus = "A justificativa é obrigatória.";
+                    return;
+                }
+
+                await SolicitacaoService.CriarSolicitacaoAsync(solicitacaoAtual, ClienteUsuarioId);
+
+                mensagemStatus = "Solicitação enviada com sucesso! Aguarde a aprovação.";
+                showSolicitacaoModal = false;
+            }
+            catch (Exception ex)
+            {
+                mensagemStatus = $"Erro: {ex.Message}";
+            }
+        }
+
+        protected void FecharModal() => showSolicitacaoModal = false;
     }
 }
