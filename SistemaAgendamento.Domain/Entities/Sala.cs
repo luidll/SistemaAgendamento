@@ -16,5 +16,7 @@ namespace SistemaAgendamento.Domain.Entities
         public string Descricao { get; set; } = string.Empty;
 
         public string? ImagemUrl { get; set; }
+        public bool Ativo { get; set; }
+
     }
 }

@@ -73,7 +73,8 @@ namespace SistemaAgendamento.WebApp.Components.Pages
                 Capacidade = sala.Capacidade,
                 Localizacao = sala.Localizacao,
                 Descricao = sala.Descricao,
-                ImagemUrl = sala.ImagemUrl
+                ImagemUrl = sala.ImagemUrl,
+                Ativo = sala.Ativo
             };
         }
 

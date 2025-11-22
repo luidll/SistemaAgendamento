@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <Content Remove="Components\Pages\Home.razor" />
+    <Content Remove="wwwroot\index.html" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />

@@ -27,12 +27,11 @@
             </div>
             <div class="col-md-2">
                 <label class="form-label">Ordem</label>
-                <InputNumber @bind-Value="rotinaAtual.Ordem" class="form-control" min="0" />
-                <ValidationMessage For="@(() => rotinaAtual.Ordem)" class="text-danger" />
+                <input @bind="rotinaAtual.Ordem" class="form-control" min="0" />
             </div>
             <div class="col-md-4">
                 <label class="form-label">URL da Rotina</label>
-                <InputText @bind-Value="rotinaAtual.Url" class="form-control" placeholder="/exemplo" />
+                <input @bind="rotinaAtual.Url" class="form-control" placeholder="/exemplo" />
             </div>
         </div>
         

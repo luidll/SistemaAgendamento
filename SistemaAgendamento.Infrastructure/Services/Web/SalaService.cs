@@ -22,6 +22,11 @@ namespace SistemaAgendamento.Infrastructure.Services.Web
             var salas = await _repo.GetAllAsync();
             return _mapper.Map<List<SalaResponse>>(salas);
         }
+        public async Task<List<SalaResponse>> GetAllActiveAsync()
+        {
+            var salas = await _repo.GetAllActiveAsync();
+            return _mapper.Map<List<SalaResponse>>(salas);
+        }
 
         public async Task<SalaResponse?> GetByIdAsync(int id)
         {
@@ -31,17 +36,20 @@ namespace SistemaAgendamento.Infrastructure.Services.Web
 
         public async Task<int> AddOrUpdateAsync(SalaRequest request)
         {
-            var sala = _mapper.Map<Sala>(request);
+            if (request.Id == 0)
+            {
+                var novasala = _mapper.Map<Sala>(request);
+                await _repo.AddAsync(novasala);
+                return novasala.Id;
+            }
+            var existente = await _repo.GetByIdAsync(request.Id);
+            if (existente == null)
+                throw new Exception("Sala não encontrada.");
 
-            if (sala.Id == 0)
-            {
-                await _repo.AddAsync(sala);
-            }
-            else
-            {
-                await _repo.UpdateAsync(sala);
-            }
-            return sala.Id;
+            _mapper.Map(request, existente);
+            await _repo.UpdateAsync(existente);
+
+            return existente.Id;
         }
 
         public async Task DeleteAsync(int id)

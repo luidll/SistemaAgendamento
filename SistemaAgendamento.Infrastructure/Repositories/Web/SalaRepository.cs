@@ -18,7 +18,10 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Web
         {
             return await _db.Salas.ToListAsync();
         }
-
+        public async Task<List<Sala>> GetAllActiveAsync()
+        {
+            return await _db.Salas.Where(s =>s.Ativo).ToListAsync();
+        }
         public async Task<Sala?> GetByIdAsync(int id)
         {
             return await _db.Salas.FindAsync(id);

@@ -37,7 +37,7 @@ builder.Services.AddDbContextFactory<AppDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
 });
-
+builder.Logging.SetMinimumLevel(LogLevel.Debug);
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

@@ -1,5 +1,6 @@
 ﻿@page "/admin/salas"
 @layout MainLayout
+@rendermode InteractiveServer
 
 <h3>Administração de Salas de Reunião</h3>
 <p class="text-muted">Gerenciamento dos recursos disponíveis para agendamento.</p>
@@ -34,6 +35,12 @@
                     <label class="form-label">Link da Imagem (URL)</label>
                     <InputText @bind-Value="salaAtual.ImagemUrl" class="form-control" />
                 </div>
+                <div class="col-12 d-flex align-items-center mt-3">
+                    <div class="form-check form-switch">
+                        <InputCheckbox @bind-Value="salaAtual.Ativo" class="form-check-input" id="ativoSwitch" />
+                        <label class="form-check-label" for="ativoSwitch">Ativa</label>
+                    </div>
+                </div>
             </div>
 
             @if (!string.IsNullOrEmpty(mensagemStatus))
@@ -66,6 +73,7 @@
                         <th>Nome</th>
                         <th>Capacidade</th>
                         <th>Localização</th>
+                        <th>Status</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -76,6 +84,16 @@
                             <td>@sala.Nome</td>
                             <td>@sala.Capacidade</td>
                             <td>@sala.Localizacao</td>
+                            <td>
+                                @if (sala.Ativo)
+                                {
+                                    <span class="badge bg-success">Ativo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inativo</span>
+                                }
+                            </td>
                             <td>
                                 <button class="btn btn-sm btn-outline-primary" @onclick="() => CarregarParaEdicao(sala)">Editar</button>
                                 <button class="btn btn-sm btn-outline-danger" @onclick="() => DeletarSala(sala.Id)">Deletar</button>

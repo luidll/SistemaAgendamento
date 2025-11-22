@@ -21,7 +21,7 @@ namespace SistemaAgendamento.WebApp.Components.Pages
         {
             try
             {
-                ListaDeSalas = await SalaService.GetAllAsync();
+                ListaDeSalas = await SalaService.GetAllActiveAsync();
             }
             catch (Exception ex)
             {
