@@ -8,5 +8,8 @@
         public int ModuloId { get; set; }
         public string ModuloNome { get; set; } = string.Empty;
         public string SistemaNome { get; set; } = string.Empty;
+        public int Ordem { get; set; }
+        public string Url { get; set; } = string.Empty;
+
     }
 }

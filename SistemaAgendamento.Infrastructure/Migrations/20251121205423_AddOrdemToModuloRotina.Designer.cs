@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaAgendamento.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SistemaAgendamento.Infrastructure.Data;
 namespace SistemaAgendamento.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251121205423_AddOrdemToModuloRotina")]
+    partial class AddOrdemToModuloRotina
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,6 +101,10 @@ namespace SistemaAgendamento.Infrastructure.Migrations
                     b.Property<int>("SistemaId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SistemaId");
@@ -125,10 +132,6 @@ namespace SistemaAgendamento.Infrastructure.Migrations
 
                     b.Property<int>("Ordem")
                         .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

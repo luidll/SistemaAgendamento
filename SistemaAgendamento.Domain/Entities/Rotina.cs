@@ -10,5 +10,7 @@ namespace SistemaAgendamento.Domain.Entities
         public int ModuloId { get; set; }
         public virtual Modulo Modulo { get; set; }
         public virtual ICollection<Usuario> UsuariosPermitidos { get; set; } = new List<Usuario>();
+        public int Ordem { get; set; }
+        public string Url { get; set; } = string.Empty;
     }
 }

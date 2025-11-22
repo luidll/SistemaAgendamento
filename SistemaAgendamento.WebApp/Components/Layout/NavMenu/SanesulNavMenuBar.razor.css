@@ -1,0 +1,44 @@
+﻿.navbar {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.175);
+    background-color: white;
+}
+
+@media (min-width: 769px) {
+    .navbar {
+        height: 78px;
+    }
+
+    .navbar-brand {
+        padding: 0 0 8px 0;
+    }
+
+        .navbar-brand > img {
+            height: 60px;
+        }
+}
+
+@media (max-width: 769px) {
+    .navbar > .navbar-brand {
+        padding: 5px;
+        color: #1f96b7;
+    }
+
+        .navbar > .navbar-brand > img {
+            height: 40px;
+            margin-right: 8px;
+            display: inline-block;
+        }
+}
+
+.profile-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #1F96B7;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}

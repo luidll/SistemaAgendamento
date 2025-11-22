@@ -1,0 +1,47 @@
+﻿@inherits SanesulMenuItemBase
+
+@if (SanesulMenu is not null)
+{
+    if (SanesulMenu.ItensDoMenu.Any())
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle @(MenuAtivo ? "active" : "")"
+               href="javascript:void(0);"
+               role="button"
+               data-bs-toggle="dropdown"
+               aria-expanded="false"
+               @onclick="Evento">
+
+                <i class="@SanesulMenu.Icone"></i>
+                @SanesulMenu.TituloMenu
+            </a>
+
+            <ul class="dropdown-menu">
+                @foreach (var item in SanesulMenu.ItensDoMenu)
+                {
+                    if (item.Separador)
+                    {
+                        <li><hr class="dropdown-divider"></li>
+                    }
+                    else
+                    {
+                        <li>
+                            <NavLink class="dropdown-item" href="@item.UrlItem" Match="NavLinkMatch.All">
+                                @item.NomeItem
+                            </NavLink>
+                        </li>
+                    }
+                }
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <NavLink class="nav-link" href="@(SanesulMenu.UrlMenu)">
+                <i class="@SanesulMenu.Icone"></i>
+                @SanesulMenu.TituloMenu
+            </NavLink>
+        </li>
+    }
+}

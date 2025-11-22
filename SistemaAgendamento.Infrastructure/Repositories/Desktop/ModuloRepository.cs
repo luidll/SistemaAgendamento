@@ -19,6 +19,8 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Desktop
             return await _db.Modulos
                 .Include(m => m.Sistema)
                 .AsNoTracking()
+                .OrderBy(m => m.Ordem)
+                .ThenBy(m => m.Nome)
                 .ToListAsync();
         }
 

@@ -115,7 +115,11 @@ namespace SistemaAgendamento.Infrastructure.Services.Desktop
             var usuario = await _repo.ObterComRotinasAsync(usuarioId)
                 ?? throw new Exception("Usuário não encontrado.");
 
-            usuario.RotinasPermitidas.ToList().RemoveAll(r => rotinaIds.Contains(r.Id));
+            var rotinas = await _rotinaRepo.ObterPorIdsAsync(rotinaIds);
+            foreach (var rotina in rotinas)
+            {
+                usuario.RotinasPermitidas.Remove(rotina);
+            }
 
             await _repo.AtualizarAsync(usuario);
         }

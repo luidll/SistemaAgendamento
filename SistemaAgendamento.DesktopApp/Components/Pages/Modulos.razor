@@ -31,12 +31,13 @@
 
         <div class="row mt-3">
             <div class="col-md-6">
-                <label class="form-label">URL Amigável</label>
-                <input class="form-control" @bind="moduloAtual.Url" placeholder="Ex: /financeiro" />
-            </div>
-            <div class="col-md-6">
                 <label class="form-label">Ícone (FontAwesome)</label>
                 <input class="form-control" @bind="moduloAtual.Icon" placeholder="Ex: fas fa-dollar-sign" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Ordem</label>
+                <InputNumber @bind-Value="moduloAtual.Ordem" class="form-control" min="0" />
+                <ValidationMessage For="@(() => moduloAtual.Ordem)" class="text-danger" />
             </div>
         </div>
 
@@ -79,8 +80,8 @@
                         <th>ID</th>
                         <th>Nome</th>
                         <th>Sistema Pai</th>
-                        <th>URL</th>
                         <th>Ícone</th>
+                        <th>Ordem</th>
                         <th>Status</th>
                         <th>Ações</th>
                     </tr>
@@ -92,8 +93,8 @@
                             <td>@m.Id</td>
                             <td>@m.Nome</td>
                             <td>@m.SistemaNome</td>
-                            <td>@m.Url</td>
                             <td><i class="@m.Icon"></i> @m.Icon</td>
+                            <td>@m.Ordem</td>
                             <td>
                                 @if (m.Ativo)
                                 {

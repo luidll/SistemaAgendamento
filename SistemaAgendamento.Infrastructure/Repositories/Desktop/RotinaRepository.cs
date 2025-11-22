@@ -20,6 +20,9 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Desktop
                 .Include(r => r.Modulo)
                 .ThenInclude(m => m.Sistema)
                 .AsNoTracking()
+                .OrderBy(r => r.Modulo.Ordem)
+                .ThenBy(r => r.Ordem)
+                .ThenBy(r => r.Nome)
                 .ToListAsync();
         }
 
@@ -73,7 +76,6 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Desktop
                 .Where(r => ids.Contains(r.Id))
                 .Include(r => r.Modulo)
                 .ThenInclude(m => m.Sistema)
-                .AsNoTracking()
                 .ToListAsync();
         }
 

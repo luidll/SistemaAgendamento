@@ -13,7 +13,7 @@ namespace SistemaAgendamento.Application.DTOs.Responses.Desktop
         public bool Ativo { get; set; }
         public int SistemaId { get; set; }
         public string SistemaNome { get; set; } = string.Empty;
-        public string Url { get; set; } = string.Empty;
         public string Icon { get; set; } = string.Empty;
+        public int Ordem { get; set; }
     }
 }

@@ -44,7 +44,7 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
                 Nome = modulo.Nome,
                 Ativo = modulo.Ativo,
                 SistemaId = modulo.SistemaId,
-                Url = modulo.Url,
+                Ordem = modulo.Ordem,
                 Icon = modulo.Icon
             };
         }

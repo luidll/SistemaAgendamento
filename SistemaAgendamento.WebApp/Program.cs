@@ -23,6 +23,7 @@ builder.Services.RegisterApplicationServices();
 #endregion
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
+builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 

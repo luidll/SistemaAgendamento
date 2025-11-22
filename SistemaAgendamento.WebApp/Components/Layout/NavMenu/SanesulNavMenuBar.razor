@@ -1,0 +1,41 @@
+﻿@inherits SanesulNavMenuBarBase
+@using Microsoft.AspNetCore.Components.Authorization
+
+<nav class="navbar navbar-expand-lg bg-white fixed-top shadow-sm">
+    <div class="container-fluid container-lg">
+        <a class="navbar-brand" href="/dashboard">
+            <img src="https://transparencia.sanesul.ms.gov.br/images/logo.png" alt="Sanesul" />
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenuSanesul" aria-controls="navMenuSanesul" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navMenuSanesul">
+            <ul class="navbar-nav me-auto">
+                @foreach (var sanesulMenu in SanesulMenus)
+                {
+                    <SanesulMenuItem SanesulMenu="sanesulMenu" />
+                }
+            </ul>
+            
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+                        <div class="profile-circle me-2">
+                             @UserInitials
+                        </div>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end shadow">
+                        <h6 class="dropdown-header">@UserName</h6>
+                        <hr class="dropdown-divider">
+                        <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Meu perfil</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-book me-2"></i> Manual do Sistema</a>
+                        <hr class="dropdown-divider">
+                        <a class="dropdown-item text-danger" href="/logout"><i class="fas fa-power-off me-2"></i> Sair</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

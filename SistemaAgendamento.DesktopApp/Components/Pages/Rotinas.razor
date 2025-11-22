@@ -25,6 +25,15 @@
                     }
                 </select>
             </div>
+            <div class="col-md-2">
+                <label class="form-label">Ordem</label>
+                <InputNumber @bind-Value="rotinaAtual.Ordem" class="form-control" min="0" />
+                <ValidationMessage For="@(() => rotinaAtual.Ordem)" class="text-danger" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">URL da Rotina</label>
+                <InputText @bind-Value="rotinaAtual.Url" class="form-control" placeholder="/exemplo" />
+            </div>
         </div>
         
         <div class="row mt-3">
@@ -66,6 +75,7 @@
                         <th>ID</th>
                         <th>Nome</th>
                         <th>Módulo Pai</th>
+                        <th>Ordem</th>
                         <th>Status</th>
                         <th>Ações</th>
                     </tr>
@@ -77,6 +87,7 @@
                             <td>@r.Id</td>
                             <td>@r.Nome</td>
                             <td>@($"{r.SistemaNome} / {r.ModuloNome}")</td>
+                            <td>@r.Ordem</td>
                             <td>
                                 @if (r.Ativo)
                                 {

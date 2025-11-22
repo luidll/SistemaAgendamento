@@ -39,6 +39,7 @@ namespace SistemaAgendamento.WebApp.Components.Layout
                             .ThenInclude(r => r.Modulo)
                         .FirstOrDefaultAsync(u => u.Id == userId);
 
+
                     if (dadosUsuario != null)
                     {
                         UserInitials = GetInitials(dadosUsuario.NomeCompleto);
@@ -46,11 +47,10 @@ namespace SistemaAgendamento.WebApp.Components.Layout
 
                         ModulosComRotinas = dadosUsuario.RotinasPermitidas
                             .Where(r => r.Modulo != null)
+                            .OrderBy(r => r.Modulo!.Ordem)
+                            .ThenBy(r => r.Ordem)
                             .GroupBy(r => r.Modulo!)
-                            .ToDictionary(
-                                g => g.Key,
-                                g => g.ToList()
-                            );
+                            .ToDictionary(g => g.Key, g => g.ToList());
                     }
                 }
             }

@@ -13,7 +13,7 @@ namespace SistemaAgendamento.Domain.Entities
         public virtual Sistema Sistema { get; set; }
 
         public virtual ICollection<Rotina> Rotinas { get; set; } = new List<Rotina>();
-        public string Url { get; set; } = string.Empty;
         public string Icon { get; set; } = "fas fa-th";
+        public int Ordem { get; set; }
     }
 }

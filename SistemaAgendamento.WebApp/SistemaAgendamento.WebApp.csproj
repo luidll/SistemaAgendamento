@@ -3,7 +3,6 @@
   <ItemGroup>
     <Content Remove="Components\Pages\Home.razor" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">

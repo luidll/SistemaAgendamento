@@ -57,6 +57,8 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
             {
                 Id = rotina.Id,
                 Nome = rotina.Nome,
+                Url = rotina.Url,
+                Ordem = rotina.Ordem,
                 Ativo = rotina.Ativo,
                 ModuloId = rotina.ModuloId
             };
