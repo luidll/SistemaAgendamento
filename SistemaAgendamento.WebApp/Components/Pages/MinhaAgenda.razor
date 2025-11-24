@@ -2,72 +2,108 @@
 @layout MainLayout
 @rendermode InteractiveServer
 
-@using System.Globalization
-@using System.Linq
-@using SistemaAgendamento.Application.DTOs.Responses
-@using System
+<div class="page-background">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge">
 
-<div class="container-fluid">
 
-    <div class="row mb-4 align-items-center">
-        <div class="col-md-6">
-            <h3>Agenda de @UserName</h3>
-            <p class="text-muted">Todos os seus compromissos e reservas de sala.</p>
-        </div>
-
-        <div class="col-md-6 text-end">
-            <label class="form-label mb-0">Visualizar Mês/Dia:</label>
-            <input type="month" class="form-control d-inline-block w-auto" @bind="DataFiltro" @bind:after="OnInitializedAsync" />
-        </div>
-    </div>
-
-    <div class="card shadow-sm">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center">
-            <span>Compromissos Agendados para @DataFiltro.ToString("MMMM/yyyy", new CultureInfo("pt-BR"))</span>
-        </div>
-        <div class="card-body">
-
-            @if (!MeusAgendamentos.Any())
-            {
-                <div class="alert alert-info text-center py-4">
-                    <i class="fa fa-calendar-check fa-2x"></i>
-                    <p class="mt-2 mb-0">Você não tem agendamentos para o período selecionado.</p>
+        <MudPaper Class="pa-4 mb-4" Elevation="0" Style="border: 1px solid #e5e7eb; border-radius: 8px;">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                <div>
+                    <MudText Typo="Typo.h5" Color="Color.Info" Style="font-weight: 700;">Minha Agenda</MudText>
+                    <MudText Typo="Typo.caption" Class="text-muted">Gerenciamento de compromissos de @UserName</MudText>
                 </div>
-            }
-            else
-            {
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Data/Hora</th>
-                            <th>Local (Sala)</th>
-                            <th>Assunto</th>
-                            <th>Responsável</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var compromisso in MeusAgendamentos.OrderBy(a => a.DataHoraInicio))
+
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                    <MudTooltip Text="Mês Anterior">
+                        <MudIconButton Icon="@Icons.Material.Filled.ChevronLeft" OnClick="@(() => AlterarMes(-1))" Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" />
+                    </MudTooltip>
+
+                    <MudText Typo="Typo.h6" Style="min-width: 220px; text-align: center; font-weight: 600; color: #374151;">
+                        @PeriodoTexto
+                    </MudText>
+
+                    <MudTooltip Text="Próximo Mês">
+                        <MudIconButton Icon="@Icons.Material.Filled.ChevronRight" OnClick="@(() => AlterarMes(1))" Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" />
+                    </MudTooltip>
+
+                    <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" OnClick="IrParaHoje" Class="ml-3 px-4" StartIcon="@Icons.Material.Filled.Today" Elevation="0">Hoje</MudButton>
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+
+
+        <div class="calendar-container">
+            <div class="calendar-grid">
+
+                @foreach (var dia in new[] { "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado" })
+                {
+                    <div class="header-cell">@dia</div>
+                }
+
+
+                @foreach (var data in DiasDoCalendario)
+                {
+                    var classeDia = "calendar-cell";
+                    if (data.Month != DataAtual.Month) classeDia += " diff-month";
+                    if (data.Date == DateTime.Today) classeDia += " today";
+
+                    <div class="@classeDia">
+                        <span class="day-number">@data.Day</span>
+
+                        @foreach (var item in MeusAgendamentos.Where(x => x.DataHoraInicio.Date == data.Date).OrderBy(x => x.DataHoraInicio))
                         {
-                            <tr>
-                                <td>
-                                    @compromisso.DataHoraInicio.ToString("dd/MM/yyyy") <br />
-                                    <small class="text-muted">@compromisso.DataHoraInicio.ToString("HH:mm") - @compromisso.DataHoraFim.ToString("HH:mm")</small>
-                                </td>
-                                <td>
-                                    <strong>@compromisso.SalaNome</strong>
-                                </td>
-                                <td>@compromisso.Titulo</td>
-                                <td>@compromisso.ResponsavelNome</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary"><i class="fa fa-pencil-alt"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fa fa-times"></i></button>
-                                </td>
-                            </tr>
+                            <div class="event-chip"
+                                 style="background-color: @GetCorSala(item.SalaNome);"
+                                 @onclick="@((e) => AbrirDetalhes(item))" @onclick:stopPropagation="true"
+                                 title="@item.Titulo - @item.SalaNome">
+                                <b>@item.DataHoraInicio.ToString("HH:mm")</b>
+                                @((item.Descricao ?? "").Length > 20 ? item.Descricao?.Substring(0, 20) + "..." : item.Descricao)
+                            </div>
                         }
-                    </tbody>
-                </table>
-            }
+                    </div>
+                }
+            </div>
         </div>
-    </div>
+
+    </MudContainer>
 </div>
+
+<MudDialog @ref="_modalDialog">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@(Agendamento != null && Agendamento.Id > 0 ? Icons.Material.Filled.EditCalendar : Icons.Material.Filled.AddCircle)" Class="mr-2" Color="Color.Primary" />
+                <text>Detalhes do Compromisso</text>
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (Agendamento != null)
+        {
+            <MudGrid Spacing="2">
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="@Agendamento.SalaNome" Label="Sala" ReadOnly="true" Variant="Variant.Filled" Margin="Margin.Dense" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="@Agendamento.ResponsavelNome" Label="Responsável" ReadOnly="true" Variant="Variant.Filled" Margin="Margin.Dense" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField Value="@Agendamento.DataHoraInicio.ToString("t")" Label="Início" ReadOnly="true" Variant="Variant.Filled" Margin="Margin.Dense" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField Value="@Agendamento.DataHoraFim.ToString("t")" Label="Fim" ReadOnly="true" Variant="Variant.Filled" Margin="Margin.Dense" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="@Agendamento.Descricao" Label="Descrição" Lines="3" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </MudItem>
+            </MudGrid>
+        }
+    </DialogContent>
+    <DialogActions>
+        @if (Agendamento != null && Agendamento.Id > 0)
+        {
+            <MudButton OnClick="Excluir" Color="Color.Error" Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Delete">Excluir</MudButton>
+        }
+        <MudSpacer />
+        <MudButton OnClick="FecharDetalhes" Color="Color.Default">Cancelar</MudButton>
+        <MudButton OnClick="Editar" Color="Color.Primary" Variant="Variant.Filled">Salvar</MudButton>
+    </DialogActions>
+</MudDialog>

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 using SistemaAgendamento.Application.Interfaces.Web;
 using SistemaAgendamento.Infrastructure.Data;
 using SistemaAgendamento.Infrastructure.Services.Web;
@@ -17,10 +18,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/logout";
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
     });
-
 #region
 builder.Services.RegisterApplicationServices();
 #endregion
+builder.Services.AddMudServices();
+builder.Services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
 builder.Services.AddControllers();
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();

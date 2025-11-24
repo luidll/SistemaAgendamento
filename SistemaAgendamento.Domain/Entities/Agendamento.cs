@@ -20,5 +20,6 @@ namespace SistemaAgendamento.Domain.Entities
         public virtual Usuario Usuario { get; set; } = null!;
         public int SalaId { get; set; }
         public virtual Sala Sala { get; set; } = null!;
+        public bool Excluído { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using SistemaAgendamento.Application.DTOs.Requests.Desktop;
-using SistemaAgendamento.Application.DTOs.Responses.Desktop;
+using SistemaAgendamento.Application.DTOs.Requests.Web;
+using SistemaAgendamento.Application.DTOs.Responses.Web;
 using SistemaAgendamento.Domain.Entities;
 
 namespace SistemaAgendamento.Application.Mappings.Profiles.Desktop

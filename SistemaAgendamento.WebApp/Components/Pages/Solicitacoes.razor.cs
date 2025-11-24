@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using SistemaAgendamento.Application.DTOs.Responses.Web;
 using SistemaAgendamento.Application.Interfaces.Web;
 using SistemaAgendamento.Domain.Enums;
 using System.Security.Claims;
-using SistemaAgendamento.Application.DTOs.Responses.Web;
+using System.Text.RegularExpressions;
 
 namespace SistemaAgendamento.WebApp.Components.Pages
 {
@@ -17,6 +18,8 @@ namespace SistemaAgendamento.WebApp.Components.Pages
 
         protected List<SolicitacaoResponse> Recebidas { get; set; } = new();
         protected List<SolicitacaoResponse> Enviadas { get; set; } = new();
+        protected List<SolicitacaoResponse> Finalizadas { get; set; } = new();
+        protected DateTime dataFinalizacao;
 
         protected int CurrentUserId;
         protected string? MensagemStatus;
@@ -37,6 +40,7 @@ namespace SistemaAgendamento.WebApp.Components.Pages
 
                 Recebidas = await SolicitacaoService.GetRecebidasAsync(userId);
                 Enviadas = await SolicitacaoService.GetEnviadasAsync(userId);
+                Finalizadas = await SolicitacaoService.GetFinalizadasAsync(userId);
             }
         }
 

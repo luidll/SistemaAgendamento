@@ -14,5 +14,7 @@ namespace SistemaAgendamento.Application.DTOs.Responses.Web
         public string Justificativa { get; set; } = string.Empty;
         public StatusSolicitacao Status { get; set; }
         public DateTime DataSolicitacao { get; set; }
+        public string RespostaSolicitacao { get; set; } = string.Empty;
+        public bool Finalizado { get; set; }
     }
 }

@@ -9,5 +9,7 @@ namespace SistemaAgendamento.Application.DTOs.Requests.Web
 
         [Required(ErrorMessage = "A justificativa é obrigatória.")]
         public string Justificativa { get; set; } = string.Empty;
+        public DateTime DataHoraInicioSolicitada { get; set; }
+        public DateTime DataHoraFimSolicitada { get; set; }
     }
 }

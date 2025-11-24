@@ -24,7 +24,7 @@ namespace SistemaAgendamento.Infrastructure.Services.Web
 
             var compromissos = await _dbContext.Agendamentos
                 .Where(a => a.SalaId == salaId &&
-                            a.DataHoraInicio.Date == date.Date)
+                            a.DataHoraInicio.Date == date.Date && !a.Excluído)
                 .AsNoTracking()
                 .ToListAsync();
 

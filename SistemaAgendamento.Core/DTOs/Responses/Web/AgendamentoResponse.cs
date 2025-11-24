@@ -15,5 +15,7 @@ namespace SistemaAgendamento.Application.DTOs.Responses.Web
         public DateTime DataHoraFim { get; set; }
         public string SalaNome { get; set; } = string.Empty;
         public string ResponsavelNome { get; set; } = string.Empty;
+        public int SalaId { get; set; }
+        public int UsuarioId { get; set; }
     }
 }

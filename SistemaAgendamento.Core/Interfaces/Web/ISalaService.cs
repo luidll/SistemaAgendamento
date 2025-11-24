@@ -1,5 +1,5 @@
-﻿using SistemaAgendamento.Application.DTOs.Requests.Desktop;
-using SistemaAgendamento.Application.DTOs.Responses.Desktop;
+﻿using SistemaAgendamento.Application.DTOs.Requests.Web;
+using SistemaAgendamento.Application.DTOs.Responses.Web;
 
 namespace SistemaAgendamento.Application.Interfaces.Web
 {

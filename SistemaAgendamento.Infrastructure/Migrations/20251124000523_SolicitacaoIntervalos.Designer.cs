@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaAgendamento.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SistemaAgendamento.Infrastructure.Data;
 namespace SistemaAgendamento.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251124000523_SolicitacaoIntervalos")]
+    partial class SolicitacaoIntervalos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,9 +56,6 @@ namespace SistemaAgendamento.Infrastructure.Migrations
 
                     b.Property<string>("Descricao")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Excluído")
-                        .HasColumnType("bit");
 
                     b.Property<int>("SalaId")
                         .HasColumnType("int");
@@ -214,9 +214,6 @@ namespace SistemaAgendamento.Infrastructure.Migrations
                     b.Property<DateTime>("DataSolicitacao")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Finalizado")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Justificativa")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -350,7 +347,7 @@ namespace SistemaAgendamento.Infrastructure.Migrations
                     b.HasOne("SistemaAgendamento.Domain.Entities.Agendamento", "Agendamento")
                         .WithMany()
                         .HasForeignKey("AgendamentoId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SistemaAgendamento.Domain.Entities.Usuario", "Solicitado")

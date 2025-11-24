@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SistemaAgendamento.Application.DTOs.Requests.Desktop
+namespace SistemaAgendamento.Application.DTOs.Requests.Web
 {
     public class SalaRequest
     {

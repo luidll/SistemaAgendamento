@@ -1,8 +1,8 @@
 ﻿using SistemaAgendamento.Domain.Entities;
 using SistemaAgendamento.Application.Interfaces.Web;
 using AutoMapper;
-using SistemaAgendamento.Application.DTOs.Requests.Desktop;
-using SistemaAgendamento.Application.DTOs.Responses.Desktop;
+using SistemaAgendamento.Application.DTOs.Responses.Web;
+using SistemaAgendamento.Application.DTOs.Requests.Web;
 
 namespace SistemaAgendamento.Infrastructure.Services.Web
 {

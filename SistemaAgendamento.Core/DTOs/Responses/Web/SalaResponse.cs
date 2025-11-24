@@ -1,4 +1,4 @@
-﻿namespace SistemaAgendamento.Application.DTOs.Responses.Desktop
+﻿namespace SistemaAgendamento.Application.DTOs.Responses.Web
 {
     public class SalaResponse
     {

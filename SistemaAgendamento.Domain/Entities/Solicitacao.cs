@@ -25,5 +25,12 @@ namespace SistemaAgendamento.Domain.Entities
         public StatusSolicitacao Status { get; set; } = StatusSolicitacao.Pendente;
 
         public string? RespostaObservacao { get; set; }
+
+        [Required]
+        public DateTime DataHoraInicioSolicitada { get; set; }
+
+        [Required]
+        public DateTime DataHoraFimSolicitada { get; set; }
+        public bool Finalizado { get; set; }
     }
 }

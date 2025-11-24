@@ -4,6 +4,7 @@ using SistemaAgendamento.Domain.Enums;
 using AutoMapper;
 using SistemaAgendamento.Application.DTOs.Responses.Web;
 using SistemaAgendamento.Application.DTOs.Requests.Web;
+using SistemaAgendamento.Application.Interfaces.Desktop;
 
 namespace SistemaAgendamento.Infrastructure.Services.Web
 {
@@ -37,6 +38,8 @@ namespace SistemaAgendamento.Infrastructure.Services.Web
                 AgendamentoId = request.AgendamentoId,
                 Justificativa = request.Justificativa,
                 DataSolicitacao = DateTime.Now,
+                DataHoraInicioSolicitada = request.DataHoraInicioSolicitada,
+                DataHoraFimSolicitada = request.DataHoraFimSolicitada,
                 Status = StatusSolicitacao.Pendente
             };
 
@@ -45,19 +48,71 @@ namespace SistemaAgendamento.Infrastructure.Services.Web
 
         public async Task AceitarSolicitacaoAsync(int solicitacaoId, int usuarioLogadoId)
         {
-            var solicitacao = await _solicitacaoRepo.GetByIdAsync(solicitacaoId);
+            var solicitacao = await _solicitacaoRepo.GetByIdWithAgendamentoAsync(solicitacaoId);
             if (solicitacao == null) throw new Exception("Solicitação não encontrada.");
 
             if (solicitacao.SolicitadoId != usuarioLogadoId) throw new Exception("Apenas o destinatário pode aceitar.");
 
-            var agendamento = solicitacao.Agendamento;
-            agendamento.UsuarioId = solicitacao.SolicitanteId;
+            var agendamentoOriginal = solicitacao.Agendamento ??
+                throw new Exception("Agendamento original não carregado.");
 
-            await _agendamentoRepo.UpdateAsync(agendamento);
+            var inicioOriginal = agendamentoOriginal.DataHoraInicio;
+            var fimOriginal = agendamentoOriginal.DataHoraFim;
+
+            var inicioSolicitado = solicitacao.DataHoraInicioSolicitada;
+            var fimSolicitado = solicitacao.DataHoraFimSolicitada;
+
+            if (inicioSolicitado >= fimSolicitado) throw new Exception("Horário de início deve ser anterior ao horário de fim.");
+            if (inicioSolicitado < inicioOriginal || fimSolicitado > fimOriginal)
+                throw new Exception("Solicitação deve estar contida no intervalo do agendamento original.");
+
+            var novoAgendamento = new Agendamento
+            {
+                Titulo = agendamentoOriginal.Titulo,
+                Descricao = $"Cedido via solicitação #{solicitacao.Id}: {solicitacao.Justificativa}",
+                UsuarioId = solicitacao.SolicitanteId,
+                SalaId = agendamentoOriginal.SalaId,
+                DataHoraInicio = inicioSolicitado,
+                DataHoraFim = fimSolicitado
+            };
+
+            await _agendamentoRepo.AddAsync(novoAgendamento);
+
+            if (inicioSolicitado > inicioOriginal)
+            {
+                var parteInicial = new Agendamento
+                {
+                    Titulo = agendamentoOriginal.Titulo,
+                    Descricao = agendamentoOriginal.Descricao,
+                    UsuarioId = agendamentoOriginal.UsuarioId,
+                    SalaId = agendamentoOriginal.SalaId,
+                    DataHoraInicio = inicioOriginal,
+                    DataHoraFim = inicioSolicitado
+                };
+                await _agendamentoRepo.AddAsync(parteInicial);
+            }
+
+            if (fimSolicitado < fimOriginal)
+            {
+                var parteFinal = new Agendamento
+                {
+                    Titulo = agendamentoOriginal.Titulo,
+                    Descricao = agendamentoOriginal.Descricao,
+                    UsuarioId = agendamentoOriginal.UsuarioId,
+                    SalaId = agendamentoOriginal.SalaId,
+                    DataHoraInicio = fimSolicitado,
+                    DataHoraFim = fimOriginal
+                };
+                await _agendamentoRepo.AddAsync(parteFinal);
+            }
+
+            await _agendamentoRepo.DeleteAsync(agendamentoOriginal.Id);
 
             solicitacao.Status = StatusSolicitacao.Aprovada;
+            solicitacao.RespostaObservacao = $"Aprovada por usuário {solicitacao.Agendamento.Usuario.NomeCompleto} em {DateTime.Now}";
             await _solicitacaoRepo.UpdateAsync(solicitacao);
         }
+
 
         public async Task RecusarSolicitacaoAsync(int solicitacaoId, int usuarioLogadoId)
         {
@@ -81,5 +136,11 @@ namespace SistemaAgendamento.Infrastructure.Services.Web
             var lista = await _solicitacaoRepo.GetEnviadasAsync(usuarioId);
             return _mapper.Map<List<SolicitacaoResponse>>(lista);
         }
+        public async Task<List<SolicitacaoResponse>> GetFinalizadasAsync(int usuarioId)
+        {
+            var lista = await _solicitacaoRepo.GetFinalizadasAsync(usuarioId);
+            return _mapper.Map<List<SolicitacaoResponse>>(lista);
+        }
+
     }
 }

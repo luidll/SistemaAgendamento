@@ -47,7 +47,7 @@ namespace SistemaAgendamento.Infrastructure.Data
             .HasOne(s => s.Agendamento)
             .WithMany()
             .HasForeignKey(s => s.AgendamentoId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

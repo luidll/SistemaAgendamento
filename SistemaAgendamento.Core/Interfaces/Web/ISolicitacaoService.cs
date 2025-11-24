@@ -10,5 +10,7 @@ namespace SistemaAgendamento.Application.Interfaces.Web
         Task RecusarSolicitacaoAsync(int solicitacaoId, int usuarioLogadoId);
         Task<List<SolicitacaoResponse>> GetRecebidasAsync(int usuarioId);
         Task<List<SolicitacaoResponse>> GetEnviadasAsync(int usuarioId);
+        Task<List<SolicitacaoResponse>> GetFinalizadasAsync(int usuarioId);
+
     }
 }

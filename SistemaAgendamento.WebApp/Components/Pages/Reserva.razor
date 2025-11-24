@@ -28,14 +28,14 @@
                     <h5 class="card-title mb-3">Escolha a Data</h5>
 
                     <input type="date" class="form-control mb-4"
-                           @bind="SelectedDate"
+                           @bind="selectedDate"
                            @bind:after="LoadAvailableSlots" />
 
-                    @if (AvailableSlots.Any())
+                    @if (availableSlots.Any())
                     {
-                        <h5 class="mb-3">Horários Disponíveis (@SelectedDate.ToString("dd/MM"))</h5>
+                        <h5 class="mb-3">Horários Disponíveis (@selectedDate.ToString("dd/MM"))</h5>
                         <div class="slot-grid">
-                            @foreach (var slot in AvailableSlots)
+                            @foreach (var slot in availableSlots)
                             {
                                 @if (slot.IsAvailable)
                                 {
@@ -48,7 +48,7 @@
                                 {
                                     <button type="button" class="btn btn-outline-danger slot-item"
                                             title="Ocupado. Clique para solicitar troca."
-                                            @onclick="() => AbrirSolicitacao(slot.ExistingAgendamentoId!.Value, slot.Time)">
+                                            @onclick="() => AbrirSolicitacaoAsync(slot.ExistingAgendamentoId!.Value, slot.Time)">
                                         @slot.Time.ToString("HH:mm") <i class="fa fa-exchange-alt ms-1"></i>
                                     </button>
                                 }
@@ -61,15 +61,49 @@
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-header bg-warning text-dark">
-                                            <h5 class="modal-title">Solicitar Horário: @horarioSolicitado?.ToString("HH:mm")</h5>
+                                            <h5 class="modal-title">Solicitar Horário: @horaInicioSolicitada</h5>
                                             <button type="button" class="btn-close" @onclick="FecharModal"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Este horário está ocupado. Deseja pedir ao dono para ceder o horário?</p>
+                                            <p>Este horário está ocupado. Deseja pedir ao dono para ceder parte do horário?</p>
 
-                                            <label class="form-label">Motivo da solicitação:</label>
+                                            <label class="form-label">Data:</label>
+                                            <input class="form-control mb-2" type="date" @bind="dataSolicitada" />
+
+                                            <div class="row">
+                                                <div class="col">
+                                                    <label class="form-label">Horário de início:</label>
+
+                                                    <select class="form-select" @onchange="OnInicioChanged">
+                                                        @foreach (var h in horariosInicio)
+                                                        {
+                                                            <option value="@h" selected="@(h == horaInicioSolicitada)">
+                                                                @h
+                                                            </option>
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="col">
+                                                    <label class="form-label">Horário de término:</label>
+
+                                                    <select class="form-select" @bind="horaFimSolicitada">
+                                                        @foreach (var h in horariosFim)
+                                                        {
+                                                            <option value="@h" selected="@(h == horaFimSolicitada)">
+                                                                @h
+                                                            </option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+
+                                            <label class="form-label mt-2">Motivo da solicitação:</label>
                                             <textarea class="form-control" @bind="solicitacaoAtual.Justificativa" rows="3" placeholder="Ex: Preciso deste horário para uma reunião urgente com a diretoria..."></textarea>
                                         </div>
+
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" @onclick="FecharModal">Cancelar</button>
                                             <button type="button" class="btn btn-warning" @onclick="EnviarSolicitacao">Enviar Pedido</button>
@@ -99,7 +133,23 @@
                             <DataAnnotationsValidator />
 
                             <div class="mb-3">
-                                <label class="form-label">Seu Nome/Email (Título)</label>
+                                <label class="form-label fw-bold">Início</label>
+                                <input type="text" class="form-control" value="@SelectedSlot.Value.ToString("HH:mm")" disabled />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Término (Duração)</label>
+                                <InputSelect @bind-Value="selectedEndTime" class="form-select">
+                                    @foreach (var endTime in validEndTimes)
+                                    {
+                                        var duration = endTime - SelectedSlot.Value;
+                                        <option value="@endTime">@endTime.ToString("HH:mm") (@FormatarDuracao(duration))</option>
+                                    }
+                                </InputSelect>
+                                <small class="text-muted">Selecione até que horas vai a reserva.</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Seu Nome/Email</label>
                                 <InputText @bind-Value="agendamentoFinal.Titulo" class="form-control" placeholder="Seu nome ou email para contato" />
                                 <ValidationMessage For="@(() => agendamentoFinal.Titulo)" class="text-danger" />
                             </div>
@@ -108,11 +158,6 @@
                                 <label class="form-label">Motivo/Descrição</label>
                                 <InputTextArea @bind-Value="agendamentoFinal.Descricao" class="form-control" rows="3" />
                             </div>
-
-                            @if (!string.IsNullOrEmpty(mensagemStatus))
-                            {
-                                <div class="alert @(mensagemStatus.Contains("sucesso") ? "alert-success" : "alert-info") mt-3">@mensagemStatus</div>
-                            }
 
                             <button type="submit" class="btn btn-success w-100">
                                 <span class="bi bi-check-circle"></span> Confirmar Reserva
@@ -124,6 +169,10 @@
                         <p class="text-center text-muted">Selecione um horário à esquerda para finalizar a reserva.</p>
                     }
                 </div>
+                @if (!string.IsNullOrEmpty(mensagemStatus))
+                {
+                    <div class="alert @(mensagemStatus.Contains("sucesso") ? "alert-success" : "alert-info") mt-3">@mensagemStatus</div>
+                }
             </div>
         </div>
     }

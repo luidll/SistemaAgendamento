@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using SistemaAgendamento.Application.DTOs.Requests.Web;
-using SistemaAgendamento.Application.DTOs.Responses.Desktop;
 using SistemaAgendamento.Application.DTOs.Responses.Web;
 using SistemaAgendamento.Application.Interfaces.Web;
 using System.Security.Claims;
@@ -31,15 +30,21 @@ namespace SistemaAgendamento.WebApp.Components.Pages
         protected SalaResponse? SalaTarget { get; set; }
         protected int ClienteUsuarioId;
 
-        protected DateTime SelectedDate { get; set; } = DateTime.Today;
-        protected List<TimeSlotResponse> AvailableSlots { get; set; } = new();
+        protected DateTime selectedDate { get; set; } = DateTime.Today;
+        protected List<TimeSlotResponse> availableSlots { get; set; } = new();
         protected DateTime? SelectedSlot { get; set; }
         protected AgendamentoRequest agendamentoFinal { get; set; } = new AgendamentoRequest();
         protected string? mensagemStatus;
-        private int SlotDurationMinutes => 30;
         protected bool showSolicitacaoModal { get; set; } = false;
         protected SolicitacaoRequest solicitacaoAtual { get; set; } = new();
-        protected DateTime? horarioSolicitado { get; set; }
+        protected List<DateTime> validEndTimes { get; set; } = new();
+        protected DateTime? selectedEndTime { get; set; }
+        protected DateTime dataSolicitada { get; set; }
+        protected string horaInicioSolicitada { get; set; } = "";
+        protected string horaFimSolicitada { get; set; } = "";
+
+        protected List<string> horariosInicio { get; set; } = new();
+        protected List<string> horariosFim { get; set; } = new();
 
         protected override async Task OnParametersSetAsync()
         {
@@ -61,27 +66,61 @@ namespace SistemaAgendamento.WebApp.Components.Pages
         {
             if (SalaTarget == null) return;
 
-            AvailableSlots = await _disponibilidadeService.GenerateTimeSlots(SalaId, SelectedDate);
+            availableSlots = await _disponibilidadeService.GenerateTimeSlots(SalaId, selectedDate);
             SelectedSlot = null;
         }
 
-        protected void SelectSlot(DateTime slot)
+        protected void SelectSlot(DateTime startTime)
         {
-            SelectedSlot = slot;
-            agendamentoFinal.DataHoraInicio = slot;
+            mensagemStatus = string.Empty;
+            SelectedSlot = startTime;
+            agendamentoFinal.DataHoraInicio = startTime;
+
+            selectedEndTime = null;
+            agendamentoFinal.DataHoraFim = DateTime.MinValue;
+            validEndTimes.Clear();
             agendamentoFinal.SalaId = SalaId;
+            var startIndex = availableSlots.FindIndex(s => s.Time == startTime);
+
+            if (startIndex == -1) return;
+
+            var currentCheck = startTime.AddMinutes(30);
+            validEndTimes.Add(currentCheck);
+
+            for (int i = startIndex + 1; i < availableSlots.Count; i++)
+            {
+                var slot = availableSlots[i];
+
+                if (!slot.IsAvailable)
+                    break;
+
+                if (slot.Time == currentCheck)
+                {
+                    currentCheck = slot.Time.AddMinutes(30);
+                    validEndTimes.Add(currentCheck);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (validEndTimes.Any())
+            {
+                selectedEndTime = validEndTimes.First();
+                agendamentoFinal.DataHoraFim = selectedEndTime.Value;
+            }
         }
 
         protected async Task HandleBooking()
         {
-            if (SelectedSlot == null)
+            if (SelectedSlot == null || selectedEndTime == null)
             {
-                mensagemStatus = "Por favor, selecione um horário.";
+                mensagemStatus = "Por favor, selecione o horário de início e fim.";
                 return;
             }
-
             agendamentoFinal.UsuarioId = ClienteUsuarioId;
-            agendamentoFinal.DataHoraFim = SelectedSlot.Value.AddMinutes(SlotDurationMinutes);
+            agendamentoFinal.DataHoraFim = selectedEndTime.Value;
 
             try
             {
@@ -93,9 +132,12 @@ namespace SistemaAgendamento.WebApp.Components.Pages
 
                 await _agendamentoService.AddOrUpdateAsync(agendamentoFinal);
 
-                mensagemStatus = $"Agendamento da sala {SalaTarget?.Nome} confirmado para {SelectedSlot.Value.ToString("dd/MM - HH:mm")}!";
+                mensagemStatus = $"Agendamento confirmado: {SelectedSlot.Value:HH:mm} até {selectedEndTime.Value:HH:mm}!";
 
                 agendamentoFinal = new AgendamentoRequest { SalaId = SalaId, UsuarioId = ClienteUsuarioId };
+                validEndTimes.Clear();
+                SelectedSlot = null;
+                selectedEndTime = null;
                 await LoadAvailableSlots();
             }
             catch (Exception ex)
@@ -103,21 +145,47 @@ namespace SistemaAgendamento.WebApp.Components.Pages
                 mensagemStatus = $"Erro ao confirmar agendamento: {ex.Message}";
             }
         }
-        protected void AbrirSolicitacao(int agendamentoId, DateTime horario)
+        protected async Task AbrirSolicitacaoAsync(int agendamentoId, DateTime horario)
         {
-            solicitacaoAtual = new SolicitacaoRequest { AgendamentoId = agendamentoId };
-            horarioSolicitado = horario;
+            dataSolicitada = horario;
+            solicitacaoAtual = new SolicitacaoRequest { AgendamentoId = agendamentoId, DataHoraInicioSolicitada = horario };
+            var agendamento = await _agendamentoService.GetByIdAsync(agendamentoId);
+            if(agendamento != null)
+            {
+                GerarHorarios(solicitacaoAtual.DataHoraInicioSolicitada, agendamento.DataHoraFim);
+            }
+            horaInicioSolicitada = horario.ToString("HH:mm");
+            AtualizarHorariosFim();
             showSolicitacaoModal = true;
             mensagemStatus = null;
+
         }
 
         protected async Task EnviarSolicitacao()
         {
             try
             {
+                if (string.IsNullOrEmpty(horaFimSolicitada))
+                {
+                    mensagemStatus = "Horário fim é obrigatório.";
+                    return;
+                }
+                    
+                var fimTime = TimeSpan.Parse(horaFimSolicitada);
+
+
+                solicitacaoAtual.DataHoraFimSolicitada = dataSolicitada.Date + fimTime;
+
                 if (string.IsNullOrWhiteSpace(solicitacaoAtual.Justificativa))
                 {
                     mensagemStatus = "A justificativa é obrigatória.";
+                    showSolicitacaoModal = false;
+                    return;
+                }
+                if (solicitacaoAtual.DataHoraInicioSolicitada >= solicitacaoAtual.DataHoraFimSolicitada)
+                {
+                    mensagemStatus = "Horário de início deve ser anterior ao horário de término.";
+                    showSolicitacaoModal = false;
                     return;
                 }
 
@@ -129,8 +197,65 @@ namespace SistemaAgendamento.WebApp.Components.Pages
             catch (Exception ex)
             {
                 mensagemStatus = $"Erro: {ex.Message}";
+                showSolicitacaoModal = false;
+                return;
             }
         }
+
+        private string FormatarDuracao(TimeSpan duration)
+        {
+            if (duration.TotalMinutes < 60)
+                return $"{duration.TotalMinutes} min";
+
+            var horas = (int)duration.TotalHours;
+            var minutos = duration.Minutes;
+
+            var stringHoras = horas == 1 ? "hora" : "horas";
+
+            if (minutos > 0)
+                return $"{horas} {stringHoras} e {minutos} min";
+
+            return $"{horas} {stringHoras}";
+        }
+        protected void GerarHorarios(DateTime dataInicio, DateTime dataFim)
+        {
+            horariosInicio.Clear();
+            horariosFim.Clear();
+
+            var atual = dataInicio;
+
+            while (atual <= dataFim)
+            {
+                horariosInicio.Add(atual.ToString("HH:mm"));
+                atual = atual.AddMinutes(30);
+            }
+        }
+        private void OnInicioChanged(ChangeEventArgs e)
+        {
+            horaInicioSolicitada = e.Value?.ToString() ?? "";
+
+            AtualizarHorariosFim();
+
+            horaFimSolicitada = horariosFim.FirstOrDefault() ?? "";
+        }
+
+
+        protected void AtualizarHorariosFim()
+        {
+            if (string.IsNullOrWhiteSpace(horaInicioSolicitada))
+                return;
+
+            var inicio = TimeSpan.Parse(horaInicioSolicitada);
+
+            horariosFim = horariosInicio
+                .Select(h => TimeSpan.Parse(h))
+                .Where(t => t > inicio)
+                .Select(t => t.ToString(@"hh\:mm"))
+                .ToList();
+        }
+
+
+
 
         protected void FecharModal() => showSolicitacaoModal = false;
     }

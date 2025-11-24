@@ -22,7 +22,7 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Web
         {
             var query = _db.Agendamentos.AsNoTracking()
                 .Include(a => a.Sala).Include(a => a.Usuario)
-                .Where(a => a.UsuarioId == userId);
+                .Where(a => a.UsuarioId == userId && !a.Excluído);
 
             if (start.HasValue && end.HasValue)
             {
@@ -34,7 +34,7 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Web
 
         public async Task<Agendamento?> GetAgendamentoByIdAsync(int id)
         {
-            return await _db.Agendamentos.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+            return await _db.Agendamentos.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id && !a.Excluído);
         }
 
         public async Task AddAsync(Agendamento agendamento)
@@ -47,6 +47,7 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Web
         {
             _db.Agendamentos.Update(agendamento);
             await _db.SaveChangesAsync();
+            _db.ChangeTracker.Clear();
         }
 
         public async Task DeleteAsync(int id)
@@ -54,7 +55,8 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Web
             var agendamento = await _db.Agendamentos.FindAsync(id);
             if (agendamento != null)
             {
-                _db.Agendamentos.Remove(agendamento);
+                agendamento.Excluído = true;
+                _db.Agendamentos.Update(agendamento);
                 await _db.SaveChangesAsync();
             }
         }
