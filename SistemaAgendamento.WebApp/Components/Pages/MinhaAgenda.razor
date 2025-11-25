@@ -9,7 +9,7 @@
         <MudPaper Class="pa-4 mb-4" Elevation="0" Style="border: 1px solid #e5e7eb; border-radius: 8px;">
             <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
                 <div>
-                    <MudText Typo="Typo.h5" Color="Color.Info" Style="font-weight: 700;">Minha Agenda</MudText>
+                    <MudText Typo="Typo.h5" Style="color: rgb(28, 154, 186); font-weight: 700;">Minha Agenda</MudText>
                     <MudText Typo="Typo.caption" Class="text-muted">Gerenciamento de compromissos de @UserName</MudText>
                 </div>
 
@@ -26,10 +26,12 @@
                         <MudIconButton Icon="@Icons.Material.Filled.ChevronRight" OnClick="@(() => AlterarMes(1))" Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" />
                     </MudTooltip>
 
-                    <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" OnClick="IrParaHoje" Class="ml-3 px-4" StartIcon="@Icons.Material.Filled.Today" Elevation="0">Hoje</MudButton>
+                    <MudButton Variant="Variant.Filled" Style="background-color: rgb(28, 154, 186); color:white; " Size="Size.Small" OnClick="IrParaHoje" Class="ml-3 px-4" StartIcon="@Icons.Material.Filled.Today" Elevation="0">Hoje</MudButton>
                 </MudStack>
             </MudStack>
-        </MudPaper>
+
+            <MudDivider Class="mb-6 mt-4" Style="border-color: darkgrey" />
+
 
 
         <div class="calendar-container">
@@ -64,14 +66,14 @@
                 }
             </div>
         </div>
-
+        </MudPaper>
     </MudContainer>
 </div>
 
 <MudDialog @ref="_modalDialog">
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@(Agendamento != null && Agendamento.Id > 0 ? Icons.Material.Filled.EditCalendar : Icons.Material.Filled.AddCircle)" Class="mr-2" Color="Color.Primary" />
+            <MudIcon Icon="@(Agendamento != null && Agendamento.Id > 0 ? Icons.Material.Filled.EditCalendar : Icons.Material.Filled.AddCircle)" Class="mr-2" Style="color: rgb(28, 154, 186); " />
                 <text>Detalhes do Compromisso</text>
         </MudText>
     </TitleContent>
@@ -104,6 +106,6 @@
         }
         <MudSpacer />
         <MudButton OnClick="FecharDetalhes" Color="Color.Default">Cancelar</MudButton>
-        <MudButton OnClick="Editar" Color="Color.Primary" Variant="Variant.Filled">Salvar</MudButton>
+        <MudButton OnClick="Editar" Style="background-color: rgb(28, 154, 186); color: white;" Variant="Variant.Filled">Salvar</MudButton>
     </DialogActions>
 </MudDialog>

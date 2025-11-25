@@ -25,7 +25,16 @@
         </NotAuthorized>
     </AuthorizeView>
 
-    <main class="content px-4 py-5 mt-15">
+    <main class="content px-4 py-5 mt-15 page-background">
         @Body
     </main>
 </div>
+<style>
+    .page-background {
+        background-color: #f1f1f1;
+        min-height: calc(100vh - 64px);
+        width: 100%;
+        padding-top: 20px;
+        padding-bottom: 40px;
+    }
+</style>

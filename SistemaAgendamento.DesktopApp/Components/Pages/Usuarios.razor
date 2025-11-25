@@ -20,11 +20,20 @@
         <div class="row mt-2">
             <div class="col-md-6">
                 <label class="form-label">CPF</label>
-                <input class="form-control" @bind="usuarioAtual.Cpf" />
+                <input class="form-control"
+                       value="@usuarioAtual.Cpf"
+                       @oninput="(e) => MascaraCpf(e)"
+                       placeholder="000.000.000-00"
+                       maxlength="14" />
             </div>
+
             <div class="col-md-6">
                 <label class="form-label">Telefone</label>
-                <input class="form-control" @bind="usuarioAtual.Telefone" />
+                <input class="form-control"
+                       value="@usuarioAtual.Telefone"
+                       @oninput="(e) => MascaraTelefone(e)"
+                       placeholder="(00) 00000-0000"
+                       maxlength="15" />
             </div>
         </div>
         <hr />

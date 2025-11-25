@@ -85,5 +85,54 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
             await UsuarioService.SalvarAsync(req);
             await LoadUsuarios();
         }
+        private void MascaraCpf(ChangeEventArgs e)
+        {
+            var valor = ApenasNumeros(e.Value?.ToString());
+
+            if (valor.Length > 11)
+                valor = valor.Substring(0, 11);
+
+            if (valor.Length > 9)
+                valor = valor.Insert(3, ".").Insert(7, ".").Insert(11, "-");
+            else if (valor.Length > 6)
+                valor = valor.Insert(3, ".").Insert(7, ".");
+            else if (valor.Length > 3)
+                valor = valor.Insert(3, ".");
+
+            usuarioAtual.Cpf = valor;
+        }
+        private void MascaraTelefone(ChangeEventArgs e)
+        {
+            var valor = ApenasNumeros(e.Value?.ToString());
+
+            if (valor.Length > 11)
+                valor = valor.Substring(0, 11);
+
+            if (valor.Length == 0)
+            {
+                usuarioAtual.Telefone = "";
+                return;
+            }
+
+            if (valor.Length > 2)
+                valor = valor.Insert(0, "(").Insert(3, ") ");
+            else
+                valor = valor.Insert(0, "(");
+
+            if (valor.Length > 10)
+                valor = valor.Insert(10, "-");
+            else if (valor.Length > 6)
+            {
+                if (valor.Length >= 10)
+                    valor = valor.Insert(9, "-");
+            }
+
+            usuarioAtual.Telefone = valor;
+        }
+        private string ApenasNumeros(string str)
+        {
+            if (string.IsNullOrEmpty(str)) return "";
+            return new string(str.Where(char.IsDigit).ToArray());
+        }
     }
 }
