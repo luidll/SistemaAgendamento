@@ -6,10 +6,8 @@ namespace SistemaAgendamento.Domain.Entities
     {
         public int Id { get; set; }
 
-        [Required]
         public string Titulo { get; set; } = string.Empty;
 
-        [Required]
         public DateTime DataHoraInicio { get; set; }
 
         public DateTime DataHoraFim { get; set; }

@@ -17,7 +17,6 @@ namespace SistemaAgendamento.Domain.Entities
         public int AgendamentoId { get; set; }
         public virtual Agendamento Agendamento { get; set; } = null!;
 
-        [Required]
         public string Justificativa { get; set; } = string.Empty;
 
         public DateTime DataSolicitacao { get; set; } = DateTime.Now;
@@ -26,10 +25,8 @@ namespace SistemaAgendamento.Domain.Entities
 
         public string? RespostaObservacao { get; set; }
 
-        [Required]
         public DateTime DataHoraInicioSolicitada { get; set; }
 
-        [Required]
         public DateTime DataHoraFimSolicitada { get; set; }
         public bool Finalizado { get; set; }
     }

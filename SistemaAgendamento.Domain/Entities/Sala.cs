@@ -6,7 +6,6 @@ namespace SistemaAgendamento.Domain.Entities
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "O nome da sala é obrigatório")]
         public string Nome { get; set; } = string.Empty;
 
         public int Capacidade { get; set; }
