@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using SistemaAgendamento.Application.Interfaces.Web;
@@ -6,6 +7,7 @@ using SistemaAgendamento.Infrastructure.Data;
 using SistemaAgendamento.Infrastructure.Services.Web;
 using SistemaAgendamento.WebApp.Components;
 using SistemaAgendamento.WebApp.Extensions;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,14 +35,20 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
 });
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
 var app = builder.Build();
+var supportedCultures = new[] { new CultureInfo("pt-BR") };
 
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("pt-BR"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
