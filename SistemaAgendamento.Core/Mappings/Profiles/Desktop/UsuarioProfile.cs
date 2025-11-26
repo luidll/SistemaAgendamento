@@ -9,7 +9,6 @@ namespace SistemaAgendamento.Application.Mappings.Profiles.Desktop
     {
         public UsuarioProfile()
         {
-            CreateMap<Usuario, UsuarioResponse>();
             CreateMap<UsuarioRequest, Usuario>().ReverseMap();
             CreateMap<Usuario, UsuarioResponse>()
     .ForMember(dest => dest.Rotinas, opt => opt.MapFrom(src => src.RotinasPermitidas));
