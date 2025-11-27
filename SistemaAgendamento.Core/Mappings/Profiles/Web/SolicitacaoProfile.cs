@@ -15,7 +15,7 @@ namespace SistemaAgendamento.Application.Mappings.Profiles
                 .ForMember(dest => dest.SalaNome, opt => opt.MapFrom(src => src.Agendamento.Sala.Nome))
                 .ForMember(dest => dest.DataHoraInicio, opt => opt.MapFrom(src => src.DataHoraInicioSolicitada))
                 .ForMember(dest => dest.DataHoraFim, opt => opt.MapFrom(src => src.DataHoraFimSolicitada))
-                .ForMember(dest => dest.SolicitadoNome, opt => opt.MapFrom(src => src.Agendamento.Usuario.NomeCompleto))
+                .ForMember(dest => dest.SolicitadoNome, opt => opt.MapFrom(src => src.Solicitado.NomeCompleto))
                 .ForMember(dest => dest.SolicitanteNome, opt => opt.MapFrom(src => src.Solicitante.NomeCompleto))
                 .ForMember(dest => dest.RespostaSolicitacao, opt => opt.MapFrom(src => src.RespostaObservacao))
                 .ReverseMap();

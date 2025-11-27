@@ -73,6 +73,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Nome</th>
+                        <th>Url</th>
                         <th>Módulo Pai</th>
                         <th>Ordem</th>
                         <th>Status</th>
@@ -85,7 +86,8 @@
                         <tr>
                             <td>@r.Id</td>
                             <td>@r.Nome</td>
-                            <td>@($"{r.SistemaNome} / {r.ModuloNome}")</td>
+                            <td>@r.Url</td>
+                            <td>@r.ModuloNome</td>
                             <td>@r.Ordem</td>
                             <td>
                                 @if (r.Ativo)

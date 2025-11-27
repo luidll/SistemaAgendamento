@@ -12,7 +12,7 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
 
         private List<SistemaResponse> listaSistemas = new();
         private SistemaRequest sistemaAtual = new();
-        private int? sistemaEditandoId = null;
+        private int sistemaEditandoId = 0;
 
         protected override async Task OnInitializedAsync()
         {
@@ -36,6 +36,7 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
             sistemaEditandoId = sistema.Id;
             sistemaAtual = new SistemaRequest
             {
+                Id = sistemaEditandoId,
                 Nome = sistema.Nome,
                 Ativo = sistema.Ativo
             };
@@ -49,7 +50,7 @@ namespace SistemaAgendamento.DesktopApp.Components.Pages
 
         private void LimparFormulario()
         {
-            sistemaEditandoId = null;
+            sistemaEditandoId = 0;
             sistemaAtual = new SistemaRequest();
         }
     }

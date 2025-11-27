@@ -109,6 +109,7 @@ namespace SistemaAgendamento.Infrastructure.Services.Web
             await _agendamentoRepo.DeleteAsync(agendamentoOriginal.Id);
 
             solicitacao.Status = StatusSolicitacao.Aprovada;
+            solicitacao.Finalizado = true;
             solicitacao.RespostaObservacao = $"Aprovada por usuário {solicitacao.Agendamento.Usuario.NomeCompleto} em {DateTime.Now}";
             await _solicitacaoRepo.UpdateAsync(solicitacao);
         }
@@ -122,6 +123,7 @@ namespace SistemaAgendamento.Infrastructure.Services.Web
             if (solicitacao.SolicitadoId != usuarioLogadoId) throw new Exception("Apenas o destinatário pode recusar.");
 
             solicitacao.Status = StatusSolicitacao.Recusada;
+            solicitacao.Finalizado = true;
             await _solicitacaoRepo.UpdateAsync(solicitacao);
         }
 

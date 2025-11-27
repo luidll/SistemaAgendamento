@@ -39,9 +39,13 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Web
         public async Task<Solicitacao?> GetByIdWithAgendamentoAsync(int id)
         {
             return await _db.Solicitacoes
-                .Include(s => s.Agendamento).ThenInclude(a => a.Sala)
+                .Include(s => s.Agendamento)
+                    .ThenInclude(a => a.Sala)
+                .Include(s => s.Agendamento)
+                    .ThenInclude(a => a.Usuario)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
+
 
         public async Task<List<Solicitacao>> GetRecebidasAsync(int usuarioId)
         {
@@ -77,7 +81,7 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Web
                     .ThenInclude(a => a.Sala)
                 .Include(s => s.Agendamento)
                     .ThenInclude(a => a.Usuario)
-                .Where(s => s.SolicitadoId == usuarioId && s.Finalizado)
+                .Where(s => s.Finalizado)
                 .OrderByDescending(s => s.DataSolicitacao)
                 .ToListAsync();
         }

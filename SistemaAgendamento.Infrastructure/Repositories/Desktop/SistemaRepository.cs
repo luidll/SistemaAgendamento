@@ -21,7 +21,7 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Desktop
 
         public async Task<Sistema?> GetByIdAsync(int id)
         {
-            return await _db.Sistemas.FindAsync(id);
+            return await _db.Sistemas.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task AddAsync(Sistema sistema)
@@ -32,12 +32,32 @@ namespace SistemaAgendamento.Infrastructure.Repositories.Desktop
 
         public async Task UpdateAsync(Sistema sistema)
         {
+            var local = _db.Set<Sistema>()
+                .Local
+                .FirstOrDefault(entry => entry.Id.Equals(sistema.Id));
+
+            if (local != null)
+            {
+                _db.Entry(local).State = EntityState.Detached;
+            }
+
+            _db.Entry(sistema).State = EntityState.Modified;
             _db.Sistemas.Update(sistema);
             await _db.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Sistema sistema)
         {
+            var local = _db.Set<Sistema>()
+                .Local
+                .FirstOrDefault(entry => entry.Id.Equals(sistema.Id));
+
+            if (local != null)
+            {
+                _db.Entry(local).State = EntityState.Detached;
+            }
+
+            _db.Entry(sistema).State = EntityState.Modified;
             _db.Sistemas.Remove(sistema);
             await _db.SaveChangesAsync();
         }
